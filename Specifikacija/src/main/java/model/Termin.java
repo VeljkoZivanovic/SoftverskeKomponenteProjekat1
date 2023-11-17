@@ -79,14 +79,9 @@ public class Termin {
 
     @Override
     public String toString() {
-        return "Termin {" +
-                "Pocetak " + pocetak +
-                ", Kraj " + kraj +
-                ", Prostorija " + prostorija + '\'' +
-                ", Datum"  + datum +
-                ", Dan " + dan + '\'' +
-                ", Dodatni podaci '" + additionalData + '\'' +
-                '}';
+        return  "Pocetak " + pocetak + ", Kraj " + kraj + ", Prostorija " + prostorija + ", Datum "  + datum + ", Dan " + dan + ", Dodatni podaci: '" + additionalData + '\n';
     }
+
+
 }
 

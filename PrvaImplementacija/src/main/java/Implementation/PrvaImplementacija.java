@@ -51,9 +51,14 @@ public class PrvaImplementacija extends RasporedWrapper {
 
     @Override
     public void premestiTermin(Termin stariTermin, Termin noviTermin) {
-        if (super.getTermini().contains(stariTermin)) {
-            super.getTermini().remove(stariTermin);
-            super.getTermini().add(noviTermin);
+        if (super.getTermini().contains(stariTermin))
+        {
+            if(uporedi(stariTermin,noviTermin))
+            {
+                super.getTermini().remove(stariTermin);
+                super.getTermini().add(noviTermin);
+            }
+            else System.out.println("Termin se ne moze premestiti");
         }
     }
 
@@ -80,5 +85,26 @@ public class PrvaImplementacija extends RasporedWrapper {
     @Override
     public void filtrirajpoProfesoru(String id, String nastavnik) {
 
+    }
+    @Override
+    public boolean uporedi(Termin termin1, Termin termin2) {
+        List<Termin> sviTermini = super.getTermini();
+
+        for (Termin t : sviTermini) {
+            // Preskoči proveru za sam stari termin
+            if (t.equals(termin1)) {
+                continue;
+            }
+
+            // Provera za novi termin
+            if (t.getProstorija().equals(termin2.getProstorija()) &&
+                    t.getDatum().equals(termin2.getDatum()) &&
+                    !t.getPocetak().isAfter(termin2.getKraj()) &&
+                    !t.getKraj().isBefore(termin2.getPocetak())) {
+                return false; // Novi termin se poklapa sa nekim postojećim terminom
+            }
+        }
+
+        return true; // Nema poklapanja, premestanje je moguće
     }
 }

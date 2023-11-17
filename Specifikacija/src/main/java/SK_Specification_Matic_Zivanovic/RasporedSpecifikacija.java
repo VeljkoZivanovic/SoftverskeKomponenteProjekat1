@@ -36,5 +36,6 @@ public interface RasporedSpecifikacija {
     void filtrirajpoUcionici(String id);
 
     void filtrirajpoProfesoru(String id, String nastavnik);
+    public boolean uporedi(Termin termin1, Termin termin2);
 
 }

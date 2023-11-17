@@ -54,22 +54,26 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
     public RasporedWrapper() {
     }
 
+    /**
+     * Inicijalizacija liste termina i prostorija
+     */
     @Override
     public void inicijalizacija() {
         termini = new ArrayList<>();
         prostorije = new ArrayList<>();
     }
 
+    /**
+     * Dodavanje nove prostorije u listu prostorija
+     * @param identifikator
+     * @param additionalData
+     * @throws ProstorijaVecPostoji
+     */
     @Override
     public void dodajProstoriju(String identifikator, String additionalData) throws ProstorijaVecPostoji {
-//        Prostorija prostorija = new Prostorija(identifikator, kapacitet, imaRacunare, imaProjektor, dodatniPodaci);
-//        if(prostorije.contains(prostorija))
-//            return;
-//        else prostorije.add(prostorija);
 
         for (Prostorija p : prostorije) {
             if (p.getIdentifikator().equals(identifikator)) {
-                // Ako prostorija već postoji, možda ćete hteti da baci neki izuzetak ili ažurira postojeću prostoriju
                 throw new ProstorijaVecPostoji("Prostorija sa identifikatoro " + p.getIdentifikator() + "vec postoji!");
             }
         }
@@ -78,7 +82,11 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
         Prostorija novaProstorija = new Prostorija(identifikator, additionalData);
         prostorije.add(novaProstorija);
     }
-
+    /**
+     * Brisanje prostorije iz liste prostorija
+     * @param identifikator
+     * @throws NePostojiProstorija
+     */
     @Override
     public void obrisiProstoriju(String identifikator) throws NePostojiProstorija {
         for (Prostorija p: prostorije){
@@ -89,32 +97,37 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
             }
         }
      }
-    //prostorije.removeIf(prostorija -> prostorija.getIdentifikator().equals(identifikator));
-    // Iterator<Prostorija> iterator = prostorije.iterator();
-        //        while (iterator.hasNext()) {
-        //            Prostorija prostorija = iterator.next();
-        //            if (prostorija.getIdentifikator().equals(identifikator)) {
-        //                iterator.remove();
-        //                return; // Prekidamo petlju kada nađemo i obrišemo prostoriju
-        //            }
-        //        }
-
+    /**
+     * Dodavanje novog termina u listu termina
+     * @param termin
+     */
     @Override
     public void dodajTermin(Termin termin) {
 
     }
-
+    /**
+     * Brisanje termina iz liste termina
+     * @param termin
+     */
     @Override
     public void obrisiTermin(Termin termin) {
 
     }
-
+       /**
+        * Premestanje termina na novu vrednost vremena ili mesta
+        * @param stariTermin
+        * @param noviTermin
+        */
     @Override
     public void premestiTermin(Termin stariTermin, Termin noviTermin) {
 
     }
-
-
+    /**
+     * Ucitavanje podataka iz fajla
+     * @param putanja
+     * @param format
+     * @param config
+     */
     @Override
     public void ucitajIzFajla(String putanja, FormatFajla format, String config) {
         SaveLoadScheduleCSV csv = new SaveLoadScheduleCSV(this);
@@ -124,7 +137,11 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Snimanje podataka u fajl
+     * @param putanja
+     * @param format
+     */
     @Override
     public void snimiUFajl(String putanja, FormatFajla format) {
         SaveLoadScheduleCSV csv = new SaveLoadScheduleCSV(this);
@@ -134,19 +151,40 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Filtriranje termina po pocetku
+     * @param id
+     * @param pocetak
+     */
     @Override
     public void filtrirajpoPocetku(String id, LocalDateTime pocetak) {
 
     }
-
+    /**
+     * Filtriranje termina po ucionici
+     * @param id
+     */
     @Override
     public void filtrirajpoUcionici(String id) {
 
     }
-
+    /**
+     * Filtriranje termina po profesoru
+     * @param id
+     * @param nastavnik
+     */
     @Override
     public void filtrirajpoProfesoru(String id, String nastavnik) {
 
+    }
+    /**
+     * Poredjenje dva termina
+     * @param termin1
+     * @param termin2
+     * @return
+     */
+    @Override
+    public boolean uporedi(Termin termin1, Termin termin2) {
+        return false;
     }
 }

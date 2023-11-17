@@ -62,4 +62,10 @@ public class FilterRasporeda implements RasporedSpecifikacija {
     public void filtrirajpoProfesoru(String id, String nastavnik) {
 
     }
+
+    @Override
+    public boolean uporedi(Termin termin1, Termin termin2) {
+        return false;
+    }
+
 }
