@@ -1,0 +1,92 @@
+package model;
+
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+
+public class Termin {
+    private LocalTime pocetak;
+    private LocalTime kraj;
+    private String prostorija;
+    private LocalDate datum;
+
+    private String dan;
+
+    private String additionalData;
+
+    public Termin(String prostorija, LocalTime pocetak, LocalTime kraj, String additionalData, LocalDate datum, String dan) {
+        this.prostorija = prostorija;
+        this.pocetak = pocetak;
+        this.kraj = kraj;
+        this.additionalData = additionalData;
+        this.datum = datum;
+        this.dan = dan;
+    }
+
+    public Termin() {
+    }
+
+    public LocalTime getPocetak() {
+        return pocetak;
+    }
+
+    public void setPocetak(LocalTime pocetak) {
+        this.pocetak = pocetak;
+    }
+
+    public LocalTime getKraj() {
+        return kraj;
+    }
+
+    public void setKraj(LocalTime kraj) {
+        this.kraj = kraj;
+    }
+
+    public String getProstorija() {
+        return prostorija;
+    }
+
+    public void setProstorija(String prostorija) {
+        this.prostorija = prostorija;
+    }
+
+    public LocalDate getDatum() {
+        return datum;
+    }
+
+    public void setDatum(LocalDate datum) {
+        this.datum = datum;
+    }
+
+    public String getAdditionalData() {
+        return additionalData;
+    }
+
+    public void setAdditionalData(String additionalData) {
+        this.additionalData = additionalData;
+    }
+
+    public String getDan() {
+        return dan;
+    }
+
+    public void setDan(String dan) {
+        this.dan = dan;
+    }
+
+    @Override
+    public String toString() {
+        return "Termin {" +
+                "Pocetak " + pocetak +
+                ", Kraj " + kraj +
+                ", Prostorija " + prostorija + '\'' +
+                ", Datum"  + datum +
+                ", Dan " + dan + '\'' +
+                ", Dodatni podaci '" + additionalData + '\'' +
+                '}';
+    }
+}
+
