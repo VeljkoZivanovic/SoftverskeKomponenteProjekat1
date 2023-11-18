@@ -152,29 +152,11 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
         }
     }
     /**
-     * Filtriranje termina po pocetku
-     * @param id
-     * @param pocetak
+     * Filtriranje termina
+     * @param termin
      */
     @Override
-    public void filtrirajpoPocetku(String id, LocalDateTime pocetak) {
-
-    }
-    /**
-     * Filtriranje termina po ucionici
-     * @param id
-     */
-    @Override
-    public void filtrirajpoUcionici(String id) {
-
-    }
-    /**
-     * Filtriranje termina po profesoru
-     * @param id
-     * @param nastavnik
-     */
-    @Override
-    public void filtrirajpoProfesoru(String id, String nastavnik) {
+    public void filtriraj(Termin termin){
 
     }
     /**

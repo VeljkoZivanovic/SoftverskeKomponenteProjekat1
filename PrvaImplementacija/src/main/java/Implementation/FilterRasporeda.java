@@ -49,17 +49,7 @@ public class FilterRasporeda implements RasporedSpecifikacija {
     }
 
     @Override
-    public void filtrirajpoPocetku(String id, LocalDateTime pocetak) {
-
-    }
-
-    @Override
-    public void filtrirajpoUcionici(String id) {
-
-    }
-
-    @Override
-    public void filtrirajpoProfesoru(String id, String nastavnik) {
+    public void filtriraj(Termin termin){
 
     }
 

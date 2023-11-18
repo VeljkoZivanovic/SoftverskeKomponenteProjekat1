@@ -31,11 +31,7 @@ public interface RasporedSpecifikacija {
 
     void snimiUFajl(String putanja, FormatFajla format);
 
-    void filtrirajpoPocetku(String id, LocalDateTime pocetak);
-
-    void filtrirajpoUcionici(String id);
-
-    void filtrirajpoProfesoru(String id, String nastavnik);
+    void filtriraj(Termin t);
     public boolean uporedi(Termin termin1, Termin termin2);
 
 }
