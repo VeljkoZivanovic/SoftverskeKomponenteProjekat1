@@ -64,6 +64,7 @@ public class SaveLoadScheduleCSV {
 
                 if(columnIndex == -1) continue;
 
+                String columnName = entry.getCustom();
 
                 switch (mappings.get(columnIndex)) {
                     case "prostorija":
@@ -91,7 +92,7 @@ public class SaveLoadScheduleCSV {
                         appointment.setDan(tab);
                         break;
                     case "additionalData":
-                        appointment.setAdditionalData(record.get(columnIndex));
+                        appointment.getAdditionalData().put(columnName, record.get(columnIndex));
                         break;
                 }
             }

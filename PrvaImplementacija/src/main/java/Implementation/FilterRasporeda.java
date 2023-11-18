@@ -1,13 +1,18 @@
 package Implementation;
 
 import SK_Specification_Matic_Zivanovic.RasporedSpecifikacija;
+import SK_Specification_Matic_Zivanovic.RasporedWrapper;
 import model.FormatFajla;
 import model.Termin;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Filter;
 
-public class FilterRasporeda implements RasporedSpecifikacija {
+public class FilterRasporeda extends RasporedWrapper {
+
     @Override
     public void inicijalizacija() {
 
@@ -50,9 +55,13 @@ public class FilterRasporeda implements RasporedSpecifikacija {
 
     @Override
     public void filtriraj(Termin termin){
-
+        super.setFiltriraniTermini(TerminManager.filtrirajTermine(super.getTermini(),
+                TerminManager.filtrirajPoPocetku(termin.getPocetak()),
+                TerminManager.filtrirajPoProstoriji(termin.getProstorija()),
+                TerminManager.filtrirajPoDanu(termin.getDan()),
+                TerminManager.filtrirajPoDatumu(termin.getDatum()),
+                TerminManager.filtrirajPoDodatnimPodacima(termin.getAdditionalData())));
     }
-
     @Override
     public boolean uporedi(Termin termin1, Termin termin2) {
         return false;

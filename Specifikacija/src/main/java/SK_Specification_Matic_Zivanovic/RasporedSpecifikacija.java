@@ -34,4 +34,5 @@ public interface RasporedSpecifikacija {
     void filtriraj(Termin t);
     public boolean uporedi(Termin termin1, Termin termin2);
 
+
 }

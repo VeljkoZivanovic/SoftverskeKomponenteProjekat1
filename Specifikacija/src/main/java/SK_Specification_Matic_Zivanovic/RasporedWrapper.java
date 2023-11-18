@@ -15,6 +15,7 @@ import java.util.Map;
 
 public abstract class RasporedWrapper implements RasporedSpecifikacija{
     private List<Termin> termini;
+    private List<Termin> filtriraniTermini;
     private List<Prostorija> prostorije;
     private LocalDateTime pocetak;
     private LocalDateTime kraj;
@@ -61,6 +62,7 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
     public void inicijalizacija() {
         termini = new ArrayList<>();
         prostorije = new ArrayList<>();
+        filtriraniTermini = new ArrayList<>();
     }
 
     /**
@@ -168,5 +170,19 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
     @Override
     public boolean uporedi(Termin termin1, Termin termin2) {
         return false;
+    }
+    /**
+     * Filtriranje termina
+     * @return
+     */
+    public List<Termin> getFiltriraniTermini() {
+        return filtriraniTermini;
+    }
+    /**
+     *
+     * @param filtriraniTermini
+     */
+    public void setFiltriraniTermini(List<Termin> filtriraniTermini) {
+        this.filtriraniTermini = filtriraniTermini;
     }
 }

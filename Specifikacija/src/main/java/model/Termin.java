@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 public class Termin {
     private LocalTime pocetak;
@@ -15,9 +16,9 @@ public class Termin {
 
     private String dan;
 
-    private String additionalData;
+    private Map<String,String> additionalData;
 
-    public Termin(String prostorija, LocalTime pocetak, LocalTime kraj, String additionalData, LocalDate datum, String dan) {
+    public Termin(String prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, LocalDate datum, String dan) {
         this.prostorija = prostorija;
         this.pocetak = pocetak;
         this.kraj = kraj;
@@ -61,11 +62,11 @@ public class Termin {
         this.datum = datum;
     }
 
-    public String getAdditionalData() {
+    public Map<String,String> getAdditionalData() {
         return additionalData;
     }
 
-    public void setAdditionalData(String additionalData) {
+    public void setAdditionalData(Map<String,String> additionalData) {
         this.additionalData = additionalData;
     }
 
