@@ -57,6 +57,7 @@ public class FilterRasporeda extends RasporedWrapper {
     public void filtriraj(Termin termin){
         super.setFiltriraniTermini(TerminManager.filtrirajTermine(super.getTermini(),
                 TerminManager.filtrirajPoPocetku(termin.getPocetak()),
+                TerminManager.filtrirajPoKraju(termin.getKraj()),
                 TerminManager.filtrirajPoProstoriji(termin.getProstorija()),
                 TerminManager.filtrirajPoDanu(termin.getDan()),
                 TerminManager.filtrirajPoDatumu(termin.getDatum()),

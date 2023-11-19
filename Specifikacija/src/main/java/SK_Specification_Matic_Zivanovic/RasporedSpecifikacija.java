@@ -1,6 +1,7 @@
 package SK_Specification_Matic_Zivanovic;
 
 import exception.NePostojiProstorija;
+import exception.NevalidanTerminException;
 import model.FormatFajla;
 import model.Termin;
 import exception.ProstorijaVecPostoji;
@@ -20,7 +21,7 @@ public interface RasporedSpecifikacija {
     void obrisiProstoriju(String identifikator) throws NePostojiProstorija;
 
 
-    void dodajTermin(Termin termin);
+    void dodajTermin(Termin termin) throws NevalidanTerminException;
 
     void obrisiTermin(Termin termin);
 

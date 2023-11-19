@@ -4,6 +4,7 @@ import SK_Specification_Matic_Zivanovic.RasporedSpecifikacija;
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
 import Serialization.SaveLoadScheduleCSV;
 import exception.NePostojiProstorija;
+import exception.NevalidanTerminException;
 import exception.ProstorijaVecPostoji;
 import model.FormatFajla;
 import model.Prostorija;
@@ -28,17 +29,19 @@ public class PrvaImplementacija extends RasporedWrapper {
     }
 
     @Override
-    public void dodajProstoriju(String s, String a) throws ProstorijaVecPostoji {
+    public void dodajProstoriju(String identifikator, String additionalData) throws ProstorijaVecPostoji {
+        super.dodajProstoriju(identifikator, additionalData);
     }
 
     @Override
     public void obrisiProstoriju(String s) throws NePostojiProstorija {
+        super.obrisiProstoriju(s);
     }
 
     @Override
-    public void dodajTermin(Termin termin) {
+    public void dodajTermin(Termin termin) throws NevalidanTerminException {
         if(super.getTermini().contains(termin))
-            return;
+            throw new NevalidanTerminException();
         else super.getTermini().add(termin);
     }
 
@@ -64,17 +67,17 @@ public class PrvaImplementacija extends RasporedWrapper {
 
     @Override
     public void ucitajIzFajla(String putanja, FormatFajla formatFajla, String config) {
-
+        super.ucitajIzFajla(putanja, formatFajla, config);
     }
 
     @Override
     public void snimiUFajl(String putanja, FormatFajla formatFajla) {
-
+        super.snimiUFajl(putanja, formatFajla);
     }
 
     @Override
     public void filtriraj(Termin termin){
-
+        //mora ovde nekako da se pozove metoda filtriraj iz filterRasporeda posto rasporedcli poziva metode odavde
     }
     @Override
     public boolean uporedi(Termin termin1, Termin termin2) {

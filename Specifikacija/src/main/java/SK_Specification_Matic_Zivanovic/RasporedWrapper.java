@@ -2,6 +2,7 @@ package SK_Specification_Matic_Zivanovic;
 
 import Serialization.SaveLoadScheduleCSV;
 import exception.NePostojiProstorija;
+import exception.NevalidanTerminException;
 import model.FormatFajla;
 import model.Prostorija;
 import model.Termin;
@@ -104,7 +105,7 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
      * @param termin
      */
     @Override
-    public void dodajTermin(Termin termin) {
+    public void dodajTermin(Termin termin)throws NevalidanTerminException {
 
     }
     /**
