@@ -11,14 +11,14 @@ import java.util.Map;
 public class Termin {
     private LocalTime pocetak;
     private LocalTime kraj;
-    private String prostorija;
+    private Prostorija prostorija;
     private LocalDate datum;
 
     private String dan;
 
     private Map<String,String> additionalData;
 
-    public Termin(String prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, LocalDate datum, String dan) {
+    public Termin(Prostorija prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, LocalDate datum, String dan) {
         this.prostorija = prostorija;
         this.pocetak = pocetak;
         this.kraj = kraj;
@@ -46,11 +46,11 @@ public class Termin {
         this.kraj = kraj;
     }
 
-    public String getProstorija() {
+    public Prostorija getProstorija() {
         return prostorija;
     }
 
-    public void setProstorija(String prostorija) {
+    public void setProstorija(Prostorija prostorija) {
         this.prostorija = prostorija;
     }
 

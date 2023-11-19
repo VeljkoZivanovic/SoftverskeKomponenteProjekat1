@@ -1,5 +1,6 @@
 package Implementation;
 
+import model.Prostorija;
 import model.Termin;
 
 import java.time.LocalTime;
@@ -25,8 +26,8 @@ public class TerminManager {
         return termin -> termin.getKraj().equals(kraj);
     }
 
-    public static TerminFilter filtrirajPoProstoriji(String prostorija) {
-        return termin -> termin.getProstorija().equalsIgnoreCase(prostorija);
+    public static TerminFilter filtrirajPoProstoriji(Prostorija prostorija) {
+        return termin -> termin.getProstorija().equals(prostorija);
     }
 
     public static TerminFilter filtrirajPoDatumu(LocalDate datum) {

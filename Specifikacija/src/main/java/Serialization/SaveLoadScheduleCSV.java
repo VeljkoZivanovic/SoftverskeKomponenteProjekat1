@@ -1,6 +1,7 @@
 package Serialization;
 
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
+import model.Prostorija;
 import model.Termin;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -68,7 +69,7 @@ public class SaveLoadScheduleCSV {
 
                 switch (mappings.get(columnIndex)) {
                     case "prostorija":
-                        appointment.setProstorija(record.get(columnIndex));
+                        appointment.setProstorija(new Prostorija(record.get(columnIndex)));
                         break;
                     case "pocetak":
                         String[] split = record.get(columnIndex).split("-", 2);

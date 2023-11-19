@@ -77,7 +77,13 @@ public class PrvaImplementacija extends RasporedWrapper {
 
     @Override
     public void filtriraj(Termin termin){
-        //mora ovde nekako da se pozove metoda filtriraj iz filterRasporeda posto rasporedcli poziva metode odavde
+        super.setFiltriraniTermini(TerminManager.filtrirajTermine(super.getTermini(),
+                TerminManager.filtrirajPoPocetku(termin.getPocetak()),
+                TerminManager.filtrirajPoKraju(termin.getKraj()),
+                TerminManager.filtrirajPoProstoriji(termin.getProstorija()),
+                TerminManager.filtrirajPoDanu(termin.getDan()),
+                TerminManager.filtrirajPoDatumu(termin.getDatum()),
+                TerminManager.filtrirajPoDodatnimPodacima(termin.getAdditionalData())));
     }
     @Override
     public boolean uporedi(Termin termin1, Termin termin2) {

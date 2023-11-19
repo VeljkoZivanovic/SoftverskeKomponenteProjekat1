@@ -11,6 +11,9 @@ public class Prostorija {
         this.additionalData = additionalData;
 
     }
+    public Prostorija(String identifikator){
+        this.identifikator = identifikator;
+    }
 
     public String getIdentifikator() {
         return identifikator;
@@ -26,5 +29,10 @@ public class Prostorija {
 
     public void setAdditionalData(String additionalData) {
         this.additionalData = additionalData;
+    }
+
+    @Override
+    public String toString() {
+        return "Ucionica:" + identifikator + additionalData;
     }
 }
