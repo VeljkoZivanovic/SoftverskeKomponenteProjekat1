@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,16 @@ public class Termin {
         this.datum = datum;
         this.dan = dan;
     }
+    public Termin(Prostorija prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, String dan) {
+        this.prostorija = prostorija;
+        this.pocetak = pocetak;
+        this.kraj = kraj;
+        this.additionalData = additionalData;
+        this.dan = dan;
+    }
 
     public Termin() {
+        additionalData = new HashMap<>();
     }
 
     public LocalTime getPocetak() {

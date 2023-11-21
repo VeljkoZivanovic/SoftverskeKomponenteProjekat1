@@ -73,17 +73,17 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
      * @throws ProstorijaVecPostoji
      */
     @Override
-    public void dodajProstoriju(String identifikator, String additionalData) throws ProstorijaVecPostoji {
-
-        for (Prostorija p : prostorije) {
-            if (p.getIdentifikator().equals(identifikator)) {
-                throw new ProstorijaVecPostoji("Prostorija sa identifikatoro " + p.getIdentifikator() + "vec postoji!");
+    public void dodajProstoriju(String identifikator, String additionalData) throws ProstorijaVecPostoji{
+        // Provera da li prostorija vec postoji
+        for (Prostorija p: prostorije){
+            if(p.getIdentifikator().equals(identifikator)){
+                throw new ProstorijaVecPostoji("Prostorija sa identifikatorom " + identifikator + " vec postoji!");
             }
         }
-
         // Kreiranje nove prostorije i dodavanje u listu
-        Prostorija novaProstorija = new Prostorija(identifikator, additionalData);
-        prostorije.add(novaProstorija);
+        Prostorija prostorija = new Prostorija(identifikator, additionalData);
+        prostorije.add(prostorija);
+
     }
     /**
      * Brisanje prostorije iz liste prostorija
@@ -91,15 +91,16 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
      * @throws NePostojiProstorija
      */
     @Override
-    public void obrisiProstoriju(String identifikator) throws NePostojiProstorija {
+    public void obrisiProstoriju(String identifikator) throws NePostojiProstorija
+    {
         for (Prostorija p: prostorije){
             if(p.getIdentifikator().equals(identifikator)){
                 prostorije.remove(p);
-            } else {
-                throw new NePostojiProstorija("Ne postoji prostorija sa " + p.getIdentifikator() + "identifikatorom koja treba da se obrise");
+                return;
             }
         }
-     }
+        throw new NePostojiProstorija("Prostorija sa identifikatorom" + identifikator + " ne postoji!");
+    }
     /**
      * Dodavanje novog termina u listu termina
      * @param termin
@@ -147,8 +148,10 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
      */
     @Override
     public void snimiUFajl(String putanja, FormatFajla format) {
+        System.out.println("bbbbbbbbbbbbbbbbbbbbbbb");
         SaveLoadScheduleCSV csv = new SaveLoadScheduleCSV(this);
         try {
+            System.out.println("ccccccccccccccccc");
             csv.exportData(putanja);
         } catch (IOException e) {
             throw new RuntimeException(e);

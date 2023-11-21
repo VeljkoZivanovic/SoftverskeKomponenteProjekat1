@@ -34,15 +34,22 @@ public class PrvaImplementacija extends RasporedWrapper {
     }
 
     @Override
-    public void obrisiProstoriju(String s) throws NePostojiProstorija {
+    public void obrisiProstoriju(String s) throws NePostojiProstorija{
         super.obrisiProstoriju(s);
     }
 
     @Override
     public void dodajTermin(Termin termin) throws NevalidanTerminException {
-        if(super.getTermini().contains(termin))
-            throw new NevalidanTerminException();
-        else super.getTermini().add(termin);
+        for(Termin t : super.getTermini())
+        {
+            if(t.getProstorija().equals(termin.getProstorija()) &&
+                    t.getDatum().equals(termin.getDatum()) &&
+                    !t.getPocetak().isAfter(termin.getKraj()) &&
+                    !t.getKraj().isBefore(termin.getPocetak()))
+                throw new NevalidanTerminException();
+            //else super.getTermini().add(termin);
+        }
+        super.getTermini().add(termin);
     }
 
     @Override
@@ -72,6 +79,7 @@ public class PrvaImplementacija extends RasporedWrapper {
 
     @Override
     public void snimiUFajl(String putanja, FormatFajla formatFajla) {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         super.snimiUFajl(putanja, formatFajla);
     }
 

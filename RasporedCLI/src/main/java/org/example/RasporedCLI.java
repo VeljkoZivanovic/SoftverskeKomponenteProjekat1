@@ -3,8 +3,10 @@ package org.example;
 import Implementation.PrvaImplementacija;
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
 import exception.NePostojiProstorija;
+import exception.NevalidanTerminException;
 import exception.ProstorijaVecPostoji;
 import model.FormatFajla;
+import model.Prostorija;
 import model.Termin;
 
 import java.time.LocalDate;
@@ -21,20 +23,15 @@ public class RasporedCLI extends PrvaImplementacija {
     public static void main(String[] args) throws ProstorijaVecPostoji, NePostojiProstorija {
 
         RasporedCLI rasporedCLI = new RasporedCLI();
-        DateTimeFormatter inputFormatter = new DateTimeFormatterBuilder()
-                .appendPattern("[H:mm-HH][HH:mm-HH]")
-                .toFormatter()
-                .withResolverStyle(ResolverStyle.STRICT);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm - HH:mm");
+        rasporedCLI.inicijalizacija();
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
-            rasporedCLI.inicijalizacija();
             System.out.println("Izaberite opciju: 1) Dodaj prostoriju 2) Izbrisi prostoriju " +
                                 "3) Dodaj termin 4) Obrisi termin 5) Premesti termin" +
-                                 "6) Ucitaj iz fajla  7)Snimi u fajl 8)Filtriraj 9) Izlaz");
+                                 " 6) Ucitaj iz fajla  7)Snimi u fajl 8)Filtriraj 9) Izlaz");
             int opcija = scanner.nextInt();
-            //String linija = scanner.nextLine();
-            //String [] delovi = linija.split(" ");
+            scanner.nextLine();
 
             switch (opcija) {
 
@@ -56,30 +53,19 @@ public class RasporedCLI extends PrvaImplementacija {
                     System.out.println(rasporedCLI.getProstorije().toString());
                     break;
                 case 3:
-//                    LocalTime startDateTime = LocalTime.parse(split[0], inputFormatter);
-//                    String formattedStartTime = outputFormatter.format(startDateTime);
-//                    System.out.println("Unesite redom podatke o terminu: prostorija, pocetak, kraj, predmet, tip, nastavnik, grupe, datum, dan");
-//                    String prostorija = delovi[0];
-//                    LocalTime startDateTime = LocalTime.parse(delovi[1],inputFormatter);
-//                    String pocetak = outputFormatter.format(startDateTime);
-//                    LocalTime endDateTime = LocalTime.parse(delovi[2],inputFormatter);
-//                    String kraj = outputFormatter.format(endDateTime);
-//
-//                    String datum = delovi[7];//u terminu definisano kao lokaldate
-//                    String dan = delovi[8];
-//                    //dodati za additional data nastavnik,predmet, grupe
-//                    break;
+                    System.out.println("Unesite identifikator prostorije:");
+                    String identifikator1 = scanner.nextLine();
 
-                    System.out.println("Unesite prostoriju:");
-                    String prostorija = scanner.nextLine();
+                    System.out.println("Unesite da li je u pitanju ucionica (u) ili amfiteatar (a)");
+                    String additionalData1 = scanner.nextLine();
+
+                    Prostorija prostorija = new Prostorija(identifikator1, additionalData1);
 
                     System.out.println("Unesite početak termina:");
-                    LocalTime startDateTime = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String pocetak = outputFormatter.format(startDateTime);
+                    LocalTime pocetak = LocalTime.parse(scanner.nextLine());
 
                     System.out.println("Unesite kraj termina:");
-                    LocalTime endDateTime = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String kraj = outputFormatter.format(endDateTime);
+                    LocalTime kraj = LocalTime.parse(scanner.nextLine());
 
                     Map<String, String> additionalDataTermin = new HashMap<>();
                     System.out.println("Unesite predmet:");
@@ -95,32 +81,33 @@ public class RasporedCLI extends PrvaImplementacija {
                     additionalDataTermin.put("grupe", scanner.nextLine());
 
                     System.out.println("Unesite datum:");
-                    String datum = scanner.nextLine();
+                    LocalDate datum = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
                     String dan = scanner.nextLine();
-                    //Termin termin = new Termin(prostorija,pocetak,kraj,additionalData,datum,dan); problem oko parsiranja i prostorije
-                    //rasporedCLI.dodajTermin(termin);
+                    Termin termin = new Termin(prostorija,pocetak,kraj,additionalDataTermin,datum,dan);
+                    try {
+                        rasporedCLI.dodajTermin(termin);
+                        System.out.println(rasporedCLI.getTermini().toString());
+                    } catch (NevalidanTerminException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
                 case 4:
-//                    System.out.println("Unesite redom: pocetak, kraj, prostorija, datum, dan ");
-//                    String pocetak1 = delovi[0];//U terminu definisano kao Lokaltime mzd ce biti problema
-//                    String kraj1 = delovi[1];//u terminu definisano kao lokaltime mzd ce biti problema
-//                    String prostorija1 = delovi[2];
-//                    String datum1 = delovi[3];//u terminu definisano kao lokaldate
-//                    String dan1 = delovi[4];
-//                    //dodati za additional data nastavnik,predmet, grupe
-//                    break;
                     System.out.println("Unesite podatke o terminu koji zelite da obrisete");
-                    System.out.println("Unesite prostoriju:");
-                    String prostorija1 = scanner.nextLine();
+                    System.out.println("Unesite identifikator prostorije:");
+                    String identifaktor2 = scanner.nextLine();
+
+                    System.out.println("Unesite da li je u pitanju ucionica (u) ili amfiteatar (a)");
+                    String additionalData2 = scanner.nextLine();
+
+                    Prostorija prostorija1 = new Prostorija(identifaktor2, additionalData2);
 
                     System.out.println("Unesite početak termina:");
-                    LocalTime startDateTime1 = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String pocetak1 = outputFormatter.format(startDateTime1);
+                    LocalTime pocetak1 = LocalTime.parse(scanner.nextLine());
 
                     System.out.println("Unesite kraj termina:");
-                    LocalTime endDateTime1 = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String kraj1 = outputFormatter.format(endDateTime1);
+                    LocalTime kraj1 = LocalTime.parse(scanner.nextLine());
 
                     Map<String, String> additionalDataTermin1 = new HashMap<>();
                     System.out.println("Unesite predmet:");
@@ -136,25 +123,29 @@ public class RasporedCLI extends PrvaImplementacija {
                     additionalDataTermin1.put("grupe", scanner.nextLine());
 
                     System.out.println("Unesite datum:");
-                    String datum1 = scanner.nextLine();
+                    LocalDate datum1 = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
                     String dan1 = scanner.nextLine();
 
-                    //Termin termin = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1); problem oko parsiranja i prostorije
-                    //rasporedCLI.obrisiTermin(termin);
+                    Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
+                    rasporedCLI.obrisiTermin(termin1);
+                    break;
                 case 5:
                     System.out.println("Unesite podatke o terminu koji zelite da premestite");
-                    System.out.println("Unesite prostoriju:");
-                    String prostorijaStari = scanner.nextLine();
+                    System.out.println("Unesite identifikator prostorije:");
+                    String identifikator3 = scanner.nextLine();
+
+                    System.out.println("Unesite da li je u pitanju ucionica (u) ili amfiteatar (a)");
+                    String additionalData3 = scanner.nextLine();
+
+                    Prostorija prostorijaStari = new Prostorija(identifikator3, additionalData3);
 
                     System.out.println("Unesite početak termina:");
-                    LocalTime startDateTimeOld = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String pocetakStari = outputFormatter.format(startDateTimeOld);
+                    LocalTime pocetakStari = LocalTime.parse(scanner.nextLine());
 
                     System.out.println("Unesite kraj termina:");
-                    LocalTime endDateTimeOld = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String krajStari = outputFormatter.format(endDateTimeOld);
+                    LocalTime krajStari = LocalTime.parse(scanner.nextLine());
 
                     Map<String, String> additionalDataTerminStari = new HashMap<>();
                     System.out.println("Unesite predmet:");
@@ -170,64 +161,63 @@ public class RasporedCLI extends PrvaImplementacija {
                     additionalDataTerminStari.put("grupe", scanner.nextLine());
 
                     System.out.println("Unesite datum:");
-                    String datumStari = scanner.nextLine();
+                    LocalDate datumStari = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
                     String danStari = scanner.nextLine();
 
-                    //Termin terminStari = new Termin(prostorijaStari, pocetakStari,krajStari, additionalDataTerminStari, datumStari, danStari);
+                    Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
 
                     System.out.println("Unesite podatke o novom terminu na koji zelite da premestite stari termin");
-                    System.out.println("Unesite prostoriju:");
-                    String prostorijaNovi = scanner.nextLine();
+                    System.out.println("Unesite identifikator prostorije:");
+                    String identifikator4 = scanner.nextLine();
 
-                    System.out.println("Unesite početak termina:");
-                    LocalTime startDateTimeNew = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String pocetakNovi = outputFormatter.format(startDateTimeNew);
+                    System.out.println("Unesite da li je u pitanju ucionica (u) ili amfiteatar (a)");
+                    String additionalData4 = scanner.nextLine();
 
-                    System.out.println("Unesite kraj termina:");
-                    LocalTime endDateTimeNew = LocalTime.parse(scanner.nextLine(),inputFormatter);
-                    String krajNovi = outputFormatter.format(endDateTimeNew);
+                    Prostorija prostorijaNovi = new Prostorija(identifikator4, additionalData4);
 
-                    Map<String, String> additionalDataTerminNovi = new HashMap<>();
-                    System.out.println("Unesite predmet:");
-                    additionalDataTerminNovi.put("predmet", scanner.nextLine());
+                    System.out.println("Unesite početak novog termina:");
+                    LocalTime pocetakNovi = LocalTime.parse(scanner.nextLine());
 
-                    System.out.println("Unesite tip:");
-                    additionalDataTerminNovi.put("tip", scanner.nextLine());
+                    System.out.println("Unesite kraj novog termina:");
+                    LocalTime krajNovi = LocalTime.parse(scanner.nextLine());
 
-                    System.out.println("Unesite nastavnika:");
-                    additionalDataTerminNovi.put("nastavnik", scanner.nextLine());
-
-                    System.out.println("Unesite grupe koje slušaju predmet:");
-                    additionalDataTerminNovi.put("grupe", scanner.nextLine());
+//                    Map<String, String> additionalDataTerminNovi = new HashMap<>();
+//                    System.out.println("Unesite predmet:");
+//                    additionalDataTerminNovi.put("predmet", scanner.nextLine());
+//
+//                    System.out.println("Unesite tip:");
+//                    additionalDataTerminNovi.put("tip", scanner.nextLine());
+//
+//                    System.out.println("Unesite nastavnika:");
+//                    additionalDataTerminNovi.put("nastavnik", scanner.nextLine());
+//
+//                    System.out.println("Unesite grupe koje slušaju predmet:");
+//                    additionalDataTerminNovi.put("grupe", scanner.nextLine());
 
                     System.out.println("Unesite datum:");
-                    String datumNovi = scanner.nextLine();
+                    LocalDate datumNovi = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
                     String danNovi = scanner.nextLine();
 
-                    //Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminNovi, datumNovi,danNovi);
+                    Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
+                    rasporedCLI.premestiTermin(terminStari, terminNovi);
 
-                    //rasporedCLI.premestiTermin(terminStari, terminNovi);
                     break;
                 case 6:
-//                    String putanja = delovi[0];
-//                    FormatFajla formatFajla = FormatFajla.valueOf(delovi[1]);
-//                    String config = delovi[2];
-//                    rasporedCLI.ucitajIzFajla(putanja, formatFajla, config);
-//                    System.out.println(rasporedCLI.getTermini());
                     System.out.println("Unesite putanju fajla koji zelite da ucitate");
                     String putanja = scanner.nextLine();
 
                     System.out.println("Unesite kog formata je taj fajl");
                     FormatFajla formatFajla = FormatFajla.valueOf(scanner.nextLine());
+
                     System.out.println("Unesite putanju do config fajla");
                     String config = scanner.nextLine();
 
                     rasporedCLI.ucitajIzFajla(putanja, formatFajla,config);
-                    System.out.println(rasporedCLI.getTermini());
+                    System.out.println(rasporedCLI.getTermini().toString());
                     break;
                 case 7:
                     System.out.println("Unesite putanju fajla u koji zelite da snimite");
@@ -237,12 +227,63 @@ public class RasporedCLI extends PrvaImplementacija {
                     FormatFajla formatFajlaSnimi = FormatFajla.valueOf(scanner.nextLine());
 
                     rasporedCLI.snimiUFajl(putanjaSnimi,formatFajlaSnimi);
-//                    String putanjaSnimi = delovi[0];
-//                    FormatFajla formatFajlaSnimi = FormatFajla.valueOf(delovi[1]);
-//                    rasporedCLI.snimiUFajl(putanjaSnimi, formatFajlaSnimi);
+
                     break;
                 case 8:
                     //logika za filtriranje preko komandne linije
+                    System.out.println("Unesite vrednost za filtriranje: 0-ako ne zelite po tom atributu; konkretnu vrednost po kojoj zelite da filtrirate");
+
+                    System.out.println("Unesite identifikator prostorije:");
+                    String identifikator5 = scanner.nextLine();
+                    if(identifikator5.equals("0")) identifikator5 = null;
+
+                    System.out.println("Unesite da li je u pitanju ucionica (u) ili amfiteatar (a)");
+                    String additionalData5 = scanner.nextLine();
+                    if(additionalData5.equals("0")) additionalData5 = null;
+
+                    Prostorija prostorija5 = new Prostorija(identifikator5, additionalData5);
+
+                    System.out.println("Unesite početak termina:");
+                    LocalTime pocetak5 = LocalTime.parse(scanner.nextLine());
+                    if(pocetak5.equals("0")) pocetak5 = null;
+
+                    System.out.println("Unesite kraj termina:");
+                    LocalTime kraj5 = LocalTime.parse(scanner.nextLine());
+                    if(kraj5.equals("0")) kraj5 = null;
+
+                    System.out.println("Unesite predmet:");
+                    String predmet = scanner.nextLine();
+                    if(predmet.equals("0")) predmet = null;
+
+                    System.out.println("Unesite tip:");
+                    String tip = scanner.nextLine();
+                    if(tip.equals("0")) tip = null;
+
+                    System.out.println("Unesite nastavnika:");
+                    String nastavnik = scanner.nextLine();
+                    if(nastavnik.equals("0")) nastavnik = null;
+
+                    System.out.println("Unesite grupe");
+                    String grupe = scanner.nextLine();
+                    if(grupe.equals("0")) grupe = null;
+
+                    Map<String, String> additionalDataTermin5 = new HashMap<>();
+                    additionalDataTermin5.put("predmet", predmet);
+                    additionalDataTermin5.put("tip", tip);
+                    additionalDataTermin5.put("nastavnik", nastavnik);
+                    additionalDataTermin5.put("grupe", grupe);
+
+//                    System.out.println("Unesite datum:");
+//                    LocalDate datum5 = LocalDate.parse(scanner.nextLine());
+//                    if(datum5.equals("0")) datum5 = null;
+
+                    System.out.println("Unesite dan:");
+                    String dan5 = scanner.nextLine();
+                    if(dan5.equals("0")) dan5 = null;
+
+                    Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,dan5);
+                    rasporedCLI.filtriraj(termin5);
+                    System.out.println("Filtrirani termini: " + rasporedCLI.getFiltriraniTermini().toString());
                     break;
                 case 9:
                     return;
