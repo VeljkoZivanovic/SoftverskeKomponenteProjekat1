@@ -2,6 +2,7 @@ package SK_Specification_Matic_Zivanovic;
 
 import Serialization.SaveLoadScheduleCSV;
 import Serialization.SaveLoadScheduleJSON;
+import Serialization.SavePDF;
 import exception.NePostojiProstorija;
 import exception.NevalidanTerminException;
 import model.FormatFajla;
@@ -177,6 +178,7 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
     public void snimiUFajl(String putanja, FormatFajla format) {
         SaveLoadScheduleJSON json = new SaveLoadScheduleJSON(this);
         SaveLoadScheduleCSV csv = new SaveLoadScheduleCSV(this);
+        SavePDF pdf = new SavePDF(this);
         if(format == FormatFajla.CSV)
             try {
                 csv.exportData(putanja);
@@ -190,7 +192,12 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
                 throw new RuntimeException(e);
             }
         else if(format == FormatFajla.PDF) {
-            System.out.println("PDF");
+            try {
+                System.out.println("Usao");
+                pdf.sacuvajPDF(putanja);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     /**

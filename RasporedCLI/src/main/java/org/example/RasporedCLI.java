@@ -47,14 +47,13 @@ public class RasporedCLI {
         scanner.nextLine();
         rasporedWrapper.inicijalizacija();
         //Scanner scanner = new Scanner(System.in);
+        System.out.println("Unesite od kog do kog datuma zelite da prikazete raspored");
+        System.out.println("Unesite pocetni datum u formatu yyyy-MM-dd");
+        LocalDate pocetniDatum = LocalDate.parse(scanner.nextLine());
+        System.out.println("Unesite krajnji datum u formatu yyyy-MM-dd");
+        LocalDate krajnjiDatum = LocalDate.parse(scanner.nextLine());
+        rasporedWrapper.odrediDaneUNedelji(pocetniDatum, krajnjiDatum);
         while (true) {
-            System.out.println("Unesite od kog do kog datuma zelite da prikazete raspored");
-            System.out.println("Unesite pocetni datum u formatu yyyy-MM-dd");
-            LocalDate pocetniDatum = LocalDate.parse(scanner.nextLine());
-            System.out.println("Unesite krajnji datum u formatu yyyy-MM-dd");
-            LocalDate krajnjiDatum = LocalDate.parse(scanner.nextLine());
-            rasporedWrapper.odrediDaneUNedelji(pocetniDatum, krajnjiDatum);
-
             System.out.println("Izaberite opciju: 1) Dodaj prostoriju 2) Izbrisi prostoriju " +
                                 "3) Dodaj termin 4) Obrisi termin 5) Premesti termin" +
                                  " 6) Ucitaj iz fajla  7)Snimi u fajl 8)Filtriraj 9) Izlaz");
