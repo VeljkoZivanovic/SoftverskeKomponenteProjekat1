@@ -1,32 +1,35 @@
 package Implementation;
 
-import SK_Specification_Matic_Zivanovic.RasporedSpecifikacija;
+import SK_Specification_Matic_Zivanovic.RasporedManager;
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
-import Serialization.SaveLoadScheduleCSV;
 import exception.NePostojiProstorija;
 import exception.NevalidanTerminException;
 import exception.ProstorijaVecPostoji;
 import model.FormatFajla;
-import model.Prostorija;
 import model.Termin;
 
-import java.io.*;
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PrvaImplementacija extends RasporedWrapper {
 
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+    static {
+        RasporedManager.setRasporedWrapper(new PrvaImplementacija());
+    }
 
     @Override
     public void inicijalizacija() {
         super.inicijalizacija();
     }
+
+    @Override
+    public void odrediDaneUNedelji(LocalDate pocetniDatum, LocalDate krajnjiDatum) {
+        super.odrediDaneUNedelji(pocetniDatum, krajnjiDatum);
+    }
+
 
     @Override
     public void dodajProstoriju(String identifikator, String additionalData) throws ProstorijaVecPostoji {
