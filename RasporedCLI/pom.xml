@@ -23,19 +23,17 @@
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>PrvaImplementacija</artifactId>
+            <artifactId>DrugaImplementacija</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
 
-        <!--
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>DrugaImplementacija</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
-        !-->
     </dependencies>
 
     <build>

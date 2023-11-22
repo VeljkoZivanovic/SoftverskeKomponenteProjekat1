@@ -44,10 +44,10 @@ public class SaveLoadScheduleJSON {
         Map<String, String> mappings = new HashMap<>();
         Map<String, String> mappingsDay = new HashMap<>();
         //LocalTime endDateTime = null;
-        for(ConfigMapping configMapping : columnMappings) {
+        for (ConfigMapping configMapping : columnMappings) {
             mappings.put(configMapping.getCustom(), configMapping.getOriginal());
         }
-        for(DayMapping dayMapping : columnMappingsDay) {
+        for (DayMapping dayMapping : columnMappingsDay) {
             mappingsDay.put(dayMapping.getOriginal(), dayMapping.getCustom());
         }
 
@@ -67,24 +67,39 @@ public class SaveLoadScheduleJSON {
                 .withResolverStyle(ResolverStyle.STRICT);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
+        Set<String> identifikatoriProstorija = new HashSet<>();
+        for(Prostorija p : rw.getProstorije()) {
+            identifikatoriProstorija.add(p.getIdentifikator());
+        }
+
         for (JsonElement element : jsonArray) {
             Termin appointment = new Termin();
             JsonObject jsonObject = element.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                 String key = entry.getKey();
                 JsonElement value = entry.getValue();
-                System.out.println("Key: " + key + " Value: " + value);
-                System.out.println(mappings.get(key));
 
                 switch (mappings.get(key)) {
                     case "prostorija":
-                        String [] split2 = value.getAsString().split("",2);
+                        String[] split2 = value.getAsString().split("-", 2);
                         String identifikator = split2[0];
                         String additionalData = split2[1];
                         appointment.setProstorija(new Prostorija(identifikator, additionalData));
+                        if(identifikator != null && !identifikator.isEmpty() && additionalData != null) {
+                            boolean postoji = false;
+                            for (Prostorija p : rw.getProstorije()) {
+                                if (p.getIdentifikator().equals(identifikator)) {
+                                    postoji = true;
+                                    break;
+                                }
+                            }
+                            if (!postoji) {
+                                rw.getProstorije().add(new Prostorija(identifikator, additionalData));
+                            }
+                        }
                         break;
                     case "pocetak":
-                        if(value.getAsString().contains("-")) {
+                        if (value.getAsString().contains("-")) {
                             String[] split = value.getAsString().split("-", 2);
                             LocalTime startDateTime = LocalTime.parse(split[0], inputFormatterStart);
                             //endDateTime = LocalTime.parse(split[1], inputFormatterEnd);
@@ -95,8 +110,7 @@ public class SaveLoadScheduleJSON {
                             String formattedEndTime = outputFormatter.format(endDateTime);
                             appointment.setKraj(LocalTime.parse(formattedEndTime, outputFormatter));
                             //System.out.println("Pocetak: " + appointment.getPocetak() + " Kraj: " + appointment.getKraj());
-                        }
-                        else {
+                        } else {
                             LocalTime startDateTime = LocalTime.parse(value.getAsString(), inputFormatterStart);
                             String formattedStartTime = outputFormatter.format(startDateTime);
                             appointment.setPocetak(LocalTime.parse(formattedStartTime, outputFormatter));
@@ -111,13 +125,21 @@ public class SaveLoadScheduleJSON {
                     case "datum":
                         LocalDate datum = LocalDate.parse(value.getAsString(), formatter);
                         appointment.setDatum(datum);
+                        if (appointment.getDatum() == null) {
+                            System.out.println("DALI UDJES");
+                            LocalDate trenutniDatum = rw.getPeriodVazenjaRasporedaOd();
+                            DayOfWeek dan = appointment.getDan();
+                            //Prolazimo kroz dane sve dok ne pronadjemo prvi datum koji odgovara zadatom danu
+                            while (trenutniDatum.getDayOfWeek() != dan) {
+                                trenutniDatum = trenutniDatum.plusDays(1);
+                            }
+                            appointment.setDatum(trenutniDatum);
+                        }
                         break;
                     case "dan":
                         String tab = value.getAsString();
-                        tab = tab.replaceAll("[ \\t\\n\\x0B\\f\\r\\u00A0\\u2028\\u2029]+","");
-                        System.out.println(tab);
-                        switch(mappingsDay.get(tab))
-                        {
+                        tab = tab.replaceAll("[ \\t\\n\\x0B\\f\\r\\u00A0\\u2028\\u2029]+", "");
+                        switch (mappingsDay.get(tab)) {
                             case "MONDAY":
                                 appointment.setDan(DayOfWeek.MONDAY);
                                 break;
@@ -136,11 +158,30 @@ public class SaveLoadScheduleJSON {
                         }
                         break;
                     case "additionalData":
-                        appointment.getAdditionalData().put(key,value.getAsString());
+                        appointment.getAdditionalData().put(key, value.getAsString());
                         break;
                 }
             }
             rw.getTermini().add(appointment);
+            List<Termin> terminiZaUklanjanje = new ArrayList<>();
+
+            for (Termin t : rw.getTermini()) {
+                if (t.getDatum() == null) {
+                    LocalDate trenutniDatum = rw.getPeriodVazenjaRasporedaOd();
+                    DayOfWeek day = t.getDan();
+                    //Prolazimo kroz dane sve dok ne pronadjemo prvi datum koji odgovara zadatom danu
+                    while (trenutniDatum.getDayOfWeek() != day) {
+                        trenutniDatum = trenutniDatum.plusDays(1);
+                        if (trenutniDatum.isAfter(rw.getPeriodVazenjaRasporedaDo())) {
+                            terminiZaUklanjanje.add(t);
+                        }
+                    }
+                    if(!terminiZaUklanjanje.contains(t)) {
+                        t.setDatum(trenutniDatum);
+                    }
+                }
+            }
+            rw.getTermini().removeAll(terminiZaUklanjanje);
         }
     }
 

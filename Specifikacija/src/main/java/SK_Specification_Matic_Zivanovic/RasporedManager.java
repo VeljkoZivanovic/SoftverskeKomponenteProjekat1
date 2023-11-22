@@ -1,5 +1,6 @@
 package SK_Specification_Matic_Zivanovic;
 
+
 public class RasporedManager {
 
     private static RasporedWrapper rasporedWrapper = null;

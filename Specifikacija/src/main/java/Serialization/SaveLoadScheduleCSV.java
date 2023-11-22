@@ -78,10 +78,23 @@ public class SaveLoadScheduleCSV {
 
                 switch (mappings.get(columnIndex)) {
                     case "prostorija":
-                        String [] split2 = record.get(columnIndex).split("",2);
+                        String [] split2 = record.get(columnIndex).split("-",2);
                         String identifikator = split2[0];
                         String additionalData = split2[1];
                         appointment.setProstorija(new Prostorija(identifikator, additionalData));
+                        if(identifikator != null && !identifikator.isEmpty() && additionalData != null) {
+                            boolean postoji = false;
+                            for (Prostorija p : rw.getProstorije()) {
+                                if (p.getIdentifikator().equals(identifikator)) {
+                                    postoji = true;
+                                    break;
+                                }
+                            }
+
+                            if (!postoji) {
+                                rw.getProstorije().add(new Prostorija(identifikator, additionalData));
+                            }
+                        }
                         break;
                     case "pocetak":
                         if(record.get(columnIndex).contains("-")) {
@@ -111,6 +124,15 @@ public class SaveLoadScheduleCSV {
                     case "datum":
                         LocalDate datum = LocalDate.parse(record.get(columnIndex), formatter);
                         appointment.setDatum(datum);
+                        if(appointment.getDatum() == null) {
+                            LocalDate trenutniDatum = rw.getPeriodVazenjaRasporedaOd();
+                            DayOfWeek dan = appointment.getDan();
+                            //Prolazimo kroz dane sve dok ne pronadjemo prvi datum koji odgovara zadatom danu
+                            while(trenutniDatum.getDayOfWeek() != dan) {
+                                trenutniDatum = trenutniDatum.plusDays(1);
+                            }
+                            appointment.setDatum(trenutniDatum);
+                        }
                         break;
                     case "dan":
                         String tab = record.get(columnIndex);
@@ -141,6 +163,25 @@ public class SaveLoadScheduleCSV {
                 }
             }
             rw.getTermini().add(appointment);
+            List<Termin> terminiZaUklanjanje = new ArrayList<>();
+
+            for (Termin t : rw.getTermini()) {
+                if (t.getDatum() == null) {
+                    LocalDate trenutniDatum = rw.getPeriodVazenjaRasporedaOd();
+                    DayOfWeek day = t.getDan();
+                    //Prolazimo kroz dane sve dok ne pronadjemo prvi datum koji odgovara zadatom danu
+                    while (trenutniDatum.getDayOfWeek() != day) {
+                        trenutniDatum = trenutniDatum.plusDays(1);
+                        if (trenutniDatum.isAfter(rw.getPeriodVazenjaRasporedaDo())) {
+                            terminiZaUklanjanje.add(t);
+                        }
+                    }
+                    if(!terminiZaUklanjanje.contains(t)) {
+                        t.setDatum(trenutniDatum);
+                    }
+                }
+            }
+            rw.getTermini().removeAll(terminiZaUklanjanje);
         }
     }
 

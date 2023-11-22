@@ -1,18 +1,16 @@
-package Implementation;
+package org.example;
 
 import model.Prostorija;
 import model.Termin;
 
 import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class TerminManager {
-
-    // Interfejs za filtriranje
+public class TerminManagerDrugaImplementacija {
     @FunctionalInterface
     public interface TerminFilter {
         boolean test(Termin termin);
@@ -28,7 +26,6 @@ public class TerminManager {
     }
 
     public static TerminFilter filtrirajPoProstoriji(Prostorija prostorija) {
-        System.out.println("Dalidalidalidalidali");
         return termin -> termin.getProstorija().equals(prostorija);
     }
 
@@ -56,12 +53,10 @@ public class TerminManager {
             for (TerminFilter filter : filters) {
                 if (!filter.test(termin)) {
                     odgovara = false;
-                    System.out.println(odgovara);
                     break;
                 }
             }
             if (odgovara) {
-                System.out.println("FADDFFSFDSDSFSDFDSFDSFSDFSDF");
                 filtriraniTermini.add(termin);
             }
         }

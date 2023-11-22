@@ -5,8 +5,16 @@ import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+/**
+ * Klasa koja nam sluzi za cuvanje informacija o terminu
+ * Termin je definisan pocetkom, krajem, prostorijom, datumom i danom
+ * Dodatni podaci su u obliku mape
+ */
 public class Termin {
+
+
     private LocalTime pocetak;
     private LocalTime kraj;
     private Prostorija prostorija;
@@ -84,11 +92,24 @@ public class Termin {
         this.dan = dan;
     }
 
+
     @Override
     public String toString() {
         return  "Pocetak " + pocetak + ", Kraj " + kraj + ", Prostorija " + prostorija + ", Datum "  + datum + ", Dan " + dan + ", Dodatni podaci: '" + additionalData + '\n';
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Termin other = (Termin) obj;
+        return Objects.equals(this.getProstorija(), other.getProstorija()) &&
+                Objects.equals(this.getDatum(), other.getDatum()) &&
+                Objects.equals(this.getDan(), other.getDan()) &&
+                Objects.equals(this.getPocetak(), other.getPocetak()) &&
+                Objects.equals(this.getKraj(), other.getKraj());
+    }
 
 }
 

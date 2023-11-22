@@ -1,4 +1,4 @@
-package Implementation;
+package org.example;
 
 import SK_Specification_Matic_Zivanovic.RasporedManager;
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
@@ -6,16 +6,13 @@ import exception.*;
 import model.FormatFajla;
 import model.Termin;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Iterator;
-import java.util.List;
 
-public class PrvaImplementacija extends RasporedWrapper {
-
+public class DrugaImplementacija extends RasporedWrapper {
 
     static {
-        RasporedManager.setRasporedWrapper(new PrvaImplementacija());
+        RasporedManager.setRasporedWrapper(new DrugaImplementacija());
     }
 
     @Override
@@ -39,7 +36,7 @@ public class PrvaImplementacija extends RasporedWrapper {
     }
 
     @Override
-    public void obrisiProstoriju(String s) throws NePostojiProstorija{
+    public void obrisiProstoriju(String s) throws NePostojiProstorija {
         super.obrisiProstoriju(s);
     }
 
@@ -62,6 +59,7 @@ public class PrvaImplementacija extends RasporedWrapper {
     public void obrisiTermin(Termin termin) throws NePostojiTermin {
         boolean terminPronadjen = false;
         Iterator<Termin> iterator = super.getTermini().iterator();
+        Iterator<Termin> iterator2 = super.getNedeljniTermini().iterator();
 
         while (iterator.hasNext()) {
             Termin t = iterator.next();
@@ -70,8 +68,21 @@ public class PrvaImplementacija extends RasporedWrapper {
                     t.getDan().equals(termin.getDan())&&
                     !t.getPocetak().isAfter(termin.getKraj()) &&
                     !t.getKraj().isBefore(termin.getPocetak()))
-                    {
+            {
                 iterator.remove();
+                terminPronadjen = true;
+                System.out.println("Termin obrisan.");
+            }
+        }
+        while (iterator2.hasNext()) {
+            Termin t = iterator2.next();
+            if (t.getProstorija().equals(termin.getProstorija()) &&
+                    t.getDatum().equals(termin.getDatum()) &&
+                    t.getDan().equals(termin.getDan())&&
+                    !t.getPocetak().isAfter(termin.getKraj()) &&
+                    !t.getKraj().isBefore(termin.getPocetak()))
+            {
+                iterator2.remove();
                 terminPronadjen = true;
                 System.out.println("Termin obrisan.");
             }
@@ -81,7 +92,7 @@ public class PrvaImplementacija extends RasporedWrapper {
         if (!terminPronadjen) {
             throw new NePostojiTermin();
         }
-        System.out.println(super.getTermini().toString());
+        System.out.println(super.getNedeljniTermini().toString());
     }
 
     @Override
@@ -117,14 +128,13 @@ public class PrvaImplementacija extends RasporedWrapper {
 
     @Override
     public void filtriraj(Termin termin){
-        super.setFiltriraniTermini(TerminManager.filtrirajTermine(super.getTermini(),
-                TerminManager.filtrirajPoPocetku(termin.getPocetak()),
-                TerminManager.filtrirajPoKraju(termin.getKraj()),
-                TerminManager.filtrirajPoProstoriji(termin.getProstorija()),
-                TerminManager.filtrirajPoDanu(termin.getDan()),
-                TerminManager.filtrirajPoDatumu(termin.getDatum()),
-                TerminManager.filtrirajPoDodatnimPodacima(termin.getAdditionalData())));
-        System.out.println("Filtrirani termini: " + super.getFiltriraniTermini().toString());
+        super.setFiltriraniTermini(TerminManagerDrugaImplementacija.filtrirajTermine(super.getTermini(),
+                TerminManagerDrugaImplementacija.filtrirajPoPocetku(termin.getPocetak()),
+                TerminManagerDrugaImplementacija.filtrirajPoKraju(termin.getKraj()),
+                TerminManagerDrugaImplementacija.filtrirajPoProstoriji(termin.getProstorija()),
+                TerminManagerDrugaImplementacija.filtrirajPoDanu(termin.getDan()),
+                TerminManagerDrugaImplementacija.filtrirajPoDatumu(termin.getDatum()),
+                TerminManagerDrugaImplementacija.filtrirajPoDodatnimPodacima(termin.getAdditionalData())));
     }
     @Override
     public boolean uporedi(Termin termin1, Termin termin2) {

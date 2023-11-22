@@ -1,23 +1,21 @@
 package org.example;
 
-import Implementation.PrvaImplementacija;
 import SK_Specification_Matic_Zivanovic.RasporedManager;
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
-import exception.NePostojiProstorija;
-import exception.NevalidanTerminException;
-import exception.ProstorijaVecPostoji;
+import exception.*;
 import model.FormatFajla;
 import model.Prostorija;
 import model.Termin;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.ResolverStyle;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 public class RasporedCLI {
 
@@ -25,14 +23,14 @@ public class RasporedCLI {
     static String nameForClass = null;
 
     static RasporedWrapper rasporedWrapper;
-    public static void main(String[] args) throws ProstorijaVecPostoji, NePostojiProstorija {
+    public static void main(String[] args) throws ProstorijaVecPostoji, NePostojiProstorija, NevalidanTerminException, TerminSePreklapa {
 
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Unesite koju implementaciju zelite da koristite: 1 PrvaImplementacija 2 DrugaImplementacija");
         type = scanner.nextInt();
         if(type == 1) nameForClass = "Implementation.PrvaImplementacija";
-        else if(type == 2) nameForClass = "implementation.DrugaImplementacija";
+        else if(type == 2) nameForClass = "org.example.DrugaImplementacija";
         else {
             System.out.println("Nevažeća opcija.");
             return;
@@ -43,15 +41,21 @@ public class RasporedCLI {
             e.printStackTrace();
         }
 
-        rasporedWrapper = RasporedManager.getRasporedWrapper();
         scanner.nextLine();
+
+        rasporedWrapper = RasporedManager.getRasporedWrapper();
+        //scanner.nextLine();
         rasporedWrapper.inicijalizacija();
-        //Scanner scanner = new Scanner(System.in);
+
         System.out.println("Unesite od kog do kog datuma zelite da prikazete raspored");
         System.out.println("Unesite pocetni datum u formatu yyyy-MM-dd");
         LocalDate pocetniDatum = LocalDate.parse(scanner.nextLine());
         System.out.println("Unesite krajnji datum u formatu yyyy-MM-dd");
         LocalDate krajnjiDatum = LocalDate.parse(scanner.nextLine());
+
+        rasporedWrapper.setPeriodVazenjaRasporedaOd(pocetniDatum);
+        rasporedWrapper.setPeriodVazenjaRasporedaDo(krajnjiDatum);
+
         rasporedWrapper.odrediDaneUNedelji(pocetniDatum, krajnjiDatum);
         while (true) {
             System.out.println("Izaberite opciju: 1) Dodaj prostoriju 2) Izbrisi prostoriju " +
@@ -70,8 +74,12 @@ public class RasporedCLI {
                     System.out.println("Unesite da li se radi o ucionici sa racunarima (u) ili amfiteatru (a)");
                     String additionalData = scanner.nextLine();
 
-                    rasporedWrapper.dodajProstoriju(identifikator, additionalData);
-                    System.out.println(rasporedWrapper.getProstorije().toString());
+                    try {
+                        rasporedWrapper.dodajProstoriju(identifikator, additionalData);
+                        System.out.println(rasporedWrapper.getProstorije().toString());
+                    }catch (ProstorijaVecPostoji e){
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 2:
                     System.out.println("Unesite identifikator za prostoriju koju zelite da obrisete");
@@ -111,16 +119,12 @@ public class RasporedCLI {
                     LocalDate datum = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
-                    String dan = scanner.nextLine();
-                    /*
+                    DayOfWeek dan = DayOfWeek.valueOf(scanner.nextLine());
+
                     Termin termin = new Termin(prostorija,pocetak,kraj,additionalDataTermin,datum,dan);
-                    try {
+
                         rasporedWrapper.dodajTermin(termin);
                         System.out.println(rasporedWrapper.getTermini().toString());
-                    } catch (NevalidanTerminException e) {
-                        throw new RuntimeException(e);
-                    }
-                     */
                     break;
                 case 4:
                     System.out.println("Unesite podatke o terminu koji zelite da obrisete");
@@ -155,10 +159,14 @@ public class RasporedCLI {
                     LocalDate datum1 = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
-                    String dan1 = scanner.nextLine();
+                    DayOfWeek dan1 = DayOfWeek.valueOf(scanner.nextLine());
 
-                    //Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
-                    //rasporedWrapper.obrisiTermin(termin1);
+                    Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
+                    try {
+                        rasporedWrapper.obrisiTermin(termin1);
+                    } catch (NePostojiTermin e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 5:
                     System.out.println("Unesite podatke o terminu koji zelite da premestite");
@@ -193,9 +201,9 @@ public class RasporedCLI {
                     LocalDate datumStari = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
-                    String danStari = scanner.nextLine();
+                    DayOfWeek danStari = DayOfWeek.valueOf(scanner.nextLine());
 
-                    //Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
+                    Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
 
                     System.out.println("Unesite podatke o novom terminu na koji zelite da premestite stari termin");
                     System.out.println("Unesite identifikator prostorije:");
@@ -212,27 +220,15 @@ public class RasporedCLI {
                     System.out.println("Unesite kraj novog termina:");
                     LocalTime krajNovi = LocalTime.parse(scanner.nextLine());
 
-//                    Map<String, String> additionalDataTerminNovi = new HashMap<>();
-//                    System.out.println("Unesite predmet:");
-//                    additionalDataTerminNovi.put("predmet", scanner.nextLine());
-//
-//                    System.out.println("Unesite tip:");
-//                    additionalDataTerminNovi.put("tip", scanner.nextLine());
-//
-//                    System.out.println("Unesite nastavnika:");
-//                    additionalDataTerminNovi.put("nastavnik", scanner.nextLine());
-//
-//                    System.out.println("Unesite grupe koje slušaju predmet:");
-//                    additionalDataTerminNovi.put("grupe", scanner.nextLine());
 
                     System.out.println("Unesite datum:");
                     LocalDate datumNovi = LocalDate.parse(scanner.nextLine());
 
                     System.out.println("Unesite dan:");
-                    String danNovi = scanner.nextLine();
+                    DayOfWeek danNovi = DayOfWeek.valueOf(scanner.nextLine());
 
-                    //Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
-                    //rasporedWrapper.premestiTermin(terminStari, terminNovi);
+                    Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
+                    rasporedWrapper.premestiTermin(terminStari, terminNovi);
 
                     break;
                 case 6:
@@ -248,8 +244,27 @@ public class RasporedCLI {
                     System.out.println("Unesite putanju do config fajla sa danima");
                     String configd = scanner.nextLine();
 
-                    rasporedWrapper.ucitajIzFajla(putanja, formatFajla,config,configd);
-                    System.out.println(rasporedWrapper.getTermini().toString());
+
+                    try {
+                        rasporedWrapper.ucitajIzFajla(putanja, formatFajla,config,configd);
+                    } catch (NeispravnaPutanja e) {
+                        throw new RuntimeException(e);
+                    }
+                    rasporedWrapper.setPeriodVazenjaRasporedaOd(pocetniDatum);
+                    rasporedWrapper.setPeriodVazenjaRasporedaDo(krajnjiDatum);
+
+                    if(type==2) {
+                        rasporedWrapper.setNedeljniTermini(rasporedWrapper.getTermini());
+                        System.out.println(rasporedWrapper.getNedeljniTermini().toString());
+                        rasporedWrapper.setujRaspored(putanja, formatFajla, config, configd);
+                    }
+                     if(type == 1) {
+                        rasporedWrapper.setujRaspored(putanja, formatFajla, config, configd);
+                         System.out.println(rasporedWrapper.getTermini().toString());
+                         System.out.println(rasporedWrapper.getProstorije().toString());
+                    }
+
+
                     break;
                 case 7:
                     System.out.println("Unesite putanju fajla u koji zelite da snimite");
@@ -258,7 +273,11 @@ public class RasporedCLI {
                     System.out.println("Unesite format fajla u koji se snima");
                     FormatFajla formatFajlaSnimi = FormatFajla.valueOf(scanner.nextLine());
 
-                    rasporedWrapper.snimiUFajl(putanjaSnimi,formatFajlaSnimi);
+                    try {
+                        rasporedWrapper.snimiUFajl(putanjaSnimi,formatFajlaSnimi);
+                    } catch (NeispravnaPutanja e) {
+                        throw new RuntimeException(e);
+                    }
 
                     break;
                 case 8:
@@ -277,11 +296,11 @@ public class RasporedCLI {
 
                     System.out.println("Unesite početak termina:");
                     LocalTime pocetak5 = LocalTime.parse(scanner.nextLine());
-                    if(pocetak5.equals("0")) pocetak5 = null;
+                    if(pocetak5.equals("0:0")) pocetak5 = null;
 
                     System.out.println("Unesite kraj termina:");
                     LocalTime kraj5 = LocalTime.parse(scanner.nextLine());
-                    if(kraj5.equals("0")) kraj5 = null;
+                    if(kraj5.equals("0:0")) kraj5 = null;
 
                     System.out.println("Unesite predmet:");
                     String predmet = scanner.nextLine();
@@ -305,16 +324,16 @@ public class RasporedCLI {
                     additionalDataTermin5.put("nastavnik", nastavnik);
                     additionalDataTermin5.put("grupe", grupe);
 
-//                    System.out.println("Unesite datum:");
-//                    LocalDate datum5 = LocalDate.parse(scanner.nextLine());
-//                    if(datum5.equals("0")) datum5 = null;
+                    System.out.println("Unesite datum:");
+                    LocalDate datum5 = LocalDate.parse(scanner.nextLine());
+                    if(datum5.equals("2001-01-01")) datum5 = null;
 
                     System.out.println("Unesite dan:");
-                    String dan5 = scanner.nextLine();
-                    if(dan5.equals("0")) dan5 = null;
+                    DayOfWeek dan5 = DayOfWeek.valueOf(scanner.nextLine());
+                    if(dan5.equals("SUNDAY")) dan5 = null;
 
-                    //Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,dan5);
-                    //rasporedWrapper.filtriraj(termin5);
+                    Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,datum5, dan5);
+                    rasporedWrapper.filtriraj(termin5);
                     System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
                     break;
                 case 9:

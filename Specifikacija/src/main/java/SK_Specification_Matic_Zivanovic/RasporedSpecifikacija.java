@@ -1,10 +1,8 @@
 package SK_Specification_Matic_Zivanovic;
 
-import exception.NePostojiProstorija;
-import exception.NevalidanTerminException;
+import exception.*;
 import model.FormatFajla;
 import model.Termin;
-import exception.ProstorijaVecPostoji;
 
 
 import java.time.DayOfWeek;
@@ -18,6 +16,7 @@ public interface RasporedSpecifikacija {
 
     void inicijalizacija();
 
+    void setujRaspored(String putanja, FormatFajla formatFajla, String config, String configd);
 
     void odrediDaneUNedelji(LocalDate pocetniDatum, LocalDate krajnjiDatum);
 
@@ -28,14 +27,14 @@ public interface RasporedSpecifikacija {
 
     void dodajTermin(Termin termin) throws NevalidanTerminException;
 
-    void obrisiTermin(Termin termin);
+    void obrisiTermin(Termin termin) throws NePostojiTermin;
 
-    void premestiTermin(Termin stariTermin, Termin noviTermin);
+    void premestiTermin(Termin stariTermin, Termin noviTermin) throws TerminSePreklapa;
 
 
-    void ucitajIzFajla(String putanja, FormatFajla format, String config, String config2);
+    void ucitajIzFajla(String putanja, FormatFajla format, String config, String config2) throws NeispravnaPutanja;
 
-    void snimiUFajl(String putanja, FormatFajla format);
+    void snimiUFajl(String putanja, FormatFajla format)throws NeispravnaPutanja;
 
     void filtriraj(Termin t);
     boolean uporedi(Termin termin1, Termin termin2);
