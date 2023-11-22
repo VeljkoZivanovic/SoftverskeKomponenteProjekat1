@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -198,10 +199,31 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
             }
         }
     }
-    /**
-     * Filtriranje termina
-     * @param termin
-     */
+
+    @Override
+    public void filtrirajUcionicu(String identifikator) {
+
+    }
+    @Override
+    public void filtrirajDan(DayOfWeek dan){
+
+    }
+
+    @Override
+    public void filtrirajDatum(LocalDate datum) {
+
+    }
+
+    @Override
+    public void filtrirajPocetak(LocalTime pocetak) {
+
+    }
+
+    @Override
+    public void filtrirajKraj(LocalTime kraj) {
+
+    }
+
     @Override
     public void filtriraj(Termin termin){
 

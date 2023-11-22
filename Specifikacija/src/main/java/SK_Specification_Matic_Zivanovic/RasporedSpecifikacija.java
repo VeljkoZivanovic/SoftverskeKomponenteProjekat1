@@ -8,6 +8,7 @@ import model.Termin;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,17 @@ public interface RasporedSpecifikacija {
     void snimiUFajl(String putanja, FormatFajla format)throws NeispravnaPutanja;
 
     void filtriraj(Termin t);
+
+    void filtrirajDan(DayOfWeek dan);
+
+    void filtrirajUcionicu(String identifikator);
+
+    void filtrirajDatum(LocalDate datum);
+
+    void filtrirajPocetak(LocalTime pocetak);
+
+    void filtrirajKraj(LocalTime kraj);
+
     boolean uporedi(Termin termin1, Termin termin2);
 
 

@@ -28,7 +28,6 @@ public class TerminManager {
     }
 
     public static TerminFilter filtrirajPoProstoriji(Prostorija prostorija) {
-        System.out.println("Dalidalidalidalidali");
         return termin -> termin.getProstorija().equals(prostorija);
     }
 

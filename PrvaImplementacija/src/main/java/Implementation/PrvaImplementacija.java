@@ -8,8 +8,9 @@ import model.Termin;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Iterator;
-import java.util.List;
 
 public class PrvaImplementacija extends RasporedWrapper {
 
@@ -126,6 +127,56 @@ public class PrvaImplementacija extends RasporedWrapper {
                 TerminManager.filtrirajPoDodatnimPodacima(termin.getAdditionalData())));
         System.out.println("Filtrirani termini: " + super.getFiltriraniTermini().toString());
     }
+
+    @Override
+    public void filtrirajUcionicu(String identifikator){
+        for (Termin t: super.getTermini()) {
+            if(t.getProstorija().getIdentifikator().equals(identifikator))
+                super.getFiltriraniTermini().add(t);
+        }
+    }
+
+
+    @Override
+    public void filtrirajDan(DayOfWeek dan){
+        super.getFiltriraniTermini().removeAll(super.getFiltriraniTermini());
+       for(Termin t: super.getTermini()){
+           if(t.getDan().equals(dan))
+               super.getFiltriraniTermini().add(t);
+       }
+        System.out.println("Filtrirani termini: " + super.getFiltriraniTermini().toString());
+    }
+
+    @Override
+    public void filtrirajDatum(LocalDate datum) {
+        super.getFiltriraniTermini().removeAll(super.getFiltriraniTermini());
+        for(Termin t: super.getTermini()){
+            if(t.getDatum().equals(datum))
+                super.getFiltriraniTermini().add(t);
+        }
+        System.out.println("Filtrirani termini: " + super.getFiltriraniTermini().toString());
+    }
+
+    @Override
+    public void filtrirajPocetak(LocalTime pocetak) {
+        super.getFiltriraniTermini().removeAll(super.getFiltriraniTermini());
+        for(Termin t: super.getTermini()){
+            if(t.getPocetak().equals(pocetak))
+                super.getFiltriraniTermini().add(t);
+        }
+        System.out.println("Filtrirani termini: " + super.getFiltriraniTermini().toString());
+    }
+
+    @Override
+    public void filtrirajKraj(LocalTime kraj) {
+        super.getFiltriraniTermini().removeAll(super.getFiltriraniTermini());
+        for(Termin t: super.getTermini()){
+            if(t.getKraj().equals(kraj))
+                super.getFiltriraniTermini().add(t);
+        }
+        System.out.println("Filtrirani termini: " + super.getFiltriraniTermini().toString());
+    }
+
     @Override
     public boolean uporedi(Termin termin1, Termin termin2) {
         for (Termin t : super.getTermini()) {

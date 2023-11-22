@@ -9,6 +9,7 @@ import model.Termin;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -287,20 +288,29 @@ public class RasporedCLI {
                     System.out.println("Unesite identifikator prostorije:");
                     String identifikator5 = scanner.nextLine();
                     if(identifikator5.equals("0")) identifikator5 = null;
-
-                    System.out.println("Unesite da li je u pitanju ucionica (u) ili amfiteatar (a)");
-                    String additionalData5 = scanner.nextLine();
-                    if(additionalData5.equals("0")) additionalData5 = null;
-
-                    Prostorija prostorija5 = new Prostorija(identifikator5, additionalData5);
+                    else {
+                        rasporedWrapper.filtrirajUcionicu(identifikator5);
+                        System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
+                        break;
+                    }
 
                     System.out.println("Unesite početak termina:");
                     LocalTime pocetak5 = LocalTime.parse(scanner.nextLine());
                     if(pocetak5.equals("0:0")) pocetak5 = null;
+                    else {
+                        rasporedWrapper.filtrirajPocetak(pocetak5);
+                        System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
+                        break;
+                    }
 
                     System.out.println("Unesite kraj termina:");
                     LocalTime kraj5 = LocalTime.parse(scanner.nextLine());
                     if(kraj5.equals("0:0")) kraj5 = null;
+                    else {
+                        rasporedWrapper.filtrirajKraj(kraj5);
+                        System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
+                        break;
+                    }
 
                     System.out.println("Unesite predmet:");
                     String predmet = scanner.nextLine();
@@ -327,14 +337,19 @@ public class RasporedCLI {
                     System.out.println("Unesite datum:");
                     LocalDate datum5 = LocalDate.parse(scanner.nextLine());
                     if(datum5.equals("2001-01-01")) datum5 = null;
+                    else {
+                        rasporedWrapper.filtrirajDatum(datum5);
+                        System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
+                        break;
+                    }
 
                     System.out.println("Unesite dan:");
                     DayOfWeek dan5 = DayOfWeek.valueOf(scanner.nextLine());
                     if(dan5.equals("SUNDAY")) dan5 = null;
-
-                    Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,datum5, dan5);
-                    rasporedWrapper.filtriraj(termin5);
-                    System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
+                    else {
+                        rasporedWrapper.filtrirajDan(dan5);
+                        System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
+                    }
                     break;
                 case 9:
                     return;
