@@ -28,7 +28,7 @@ public interface RasporedSpecifikacija {
     void premestiTermin(Termin stariTermin, Termin noviTermin);
 
 
-    void ucitajIzFajla(String putanja, FormatFajla format, String config);
+    void ucitajIzFajla(String putanja, FormatFajla format, String config, String config2);
 
     void snimiUFajl(String putanja, FormatFajla format);
 

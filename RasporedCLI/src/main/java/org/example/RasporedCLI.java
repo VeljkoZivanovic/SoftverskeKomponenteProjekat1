@@ -9,6 +9,7 @@ import model.FormatFajla;
 import model.Prostorija;
 import model.Termin;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -85,13 +86,14 @@ public class RasporedCLI extends PrvaImplementacija {
 
                     System.out.println("Unesite dan:");
                     String dan = scanner.nextLine();
-                    Termin termin = new Termin(prostorija,pocetak,kraj,additionalDataTermin,datum,dan);
+                    /*Termin termin = new Termin(prostorija,pocetak,kraj,additionalDataTermin,datum,dan);
                     try {
                         rasporedCLI.dodajTermin(termin);
                         System.out.println(rasporedCLI.getTermini().toString());
                     } catch (NevalidanTerminException e) {
                         throw new RuntimeException(e);
                     }
+                     */
                     break;
                 case 4:
                     System.out.println("Unesite podatke o terminu koji zelite da obrisete");
@@ -128,8 +130,8 @@ public class RasporedCLI extends PrvaImplementacija {
                     System.out.println("Unesite dan:");
                     String dan1 = scanner.nextLine();
 
-                    Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
-                    rasporedCLI.obrisiTermin(termin1);
+                    //Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
+                    //rasporedCLI.obrisiTermin(termin1);
                     break;
                 case 5:
                     System.out.println("Unesite podatke o terminu koji zelite da premestite");
@@ -166,7 +168,7 @@ public class RasporedCLI extends PrvaImplementacija {
                     System.out.println("Unesite dan:");
                     String danStari = scanner.nextLine();
 
-                    Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
+                    //Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
 
                     System.out.println("Unesite podatke o novom terminu na koji zelite da premestite stari termin");
                     System.out.println("Unesite identifikator prostorije:");
@@ -202,8 +204,8 @@ public class RasporedCLI extends PrvaImplementacija {
                     System.out.println("Unesite dan:");
                     String danNovi = scanner.nextLine();
 
-                    Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
-                    rasporedCLI.premestiTermin(terminStari, terminNovi);
+                    //Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
+                    //rasporedCLI.premestiTermin(terminStari, terminNovi);
 
                     break;
                 case 6:
@@ -216,7 +218,10 @@ public class RasporedCLI extends PrvaImplementacija {
                     System.out.println("Unesite putanju do config fajla");
                     String config = scanner.nextLine();
 
-                    rasporedCLI.ucitajIzFajla(putanja, formatFajla,config);
+                    System.out.println("Unesite putanju do config fajla za dane");
+                    String config2 = scanner.nextLine();
+
+                    rasporedCLI.ucitajIzFajla(putanja, formatFajla,config,config2);
                     System.out.println(rasporedCLI.getTermini().toString());
                     break;
                 case 7:
@@ -281,8 +286,8 @@ public class RasporedCLI extends PrvaImplementacija {
                     String dan5 = scanner.nextLine();
                     if(dan5.equals("0")) dan5 = null;
 
-                    Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,dan5);
-                    rasporedCLI.filtriraj(termin5);
+                    //Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,dan5);
+                    //rasporedCLI.filtriraj(termin5);
                     System.out.println("Filtrirani termini: " + rasporedCLI.getFiltriraniTermini().toString());
                     break;
                 case 9:

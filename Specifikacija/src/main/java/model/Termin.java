@@ -1,10 +1,7 @@
 package model;
 
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +12,11 @@ public class Termin {
     private Prostorija prostorija;
     private LocalDate datum;
 
-    private String dan;
+    private DayOfWeek dan;
 
     private Map<String,String> additionalData;
 
-    public Termin(Prostorija prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, LocalDate datum, String dan) {
+    public Termin(Prostorija prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, LocalDate datum, DayOfWeek dan) {
         this.prostorija = prostorija;
         this.pocetak = pocetak;
         this.kraj = kraj;
@@ -27,7 +24,7 @@ public class Termin {
         this.datum = datum;
         this.dan = dan;
     }
-    public Termin(Prostorija prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, String dan) {
+    public Termin(Prostorija prostorija, LocalTime pocetak, LocalTime kraj, Map<String,String> additionalData, DayOfWeek dan) {
         this.prostorija = prostorija;
         this.pocetak = pocetak;
         this.kraj = kraj;
@@ -79,11 +76,11 @@ public class Termin {
         this.additionalData = additionalData;
     }
 
-    public String getDan() {
+    public DayOfWeek getDan() {
         return dan;
     }
 
-    public void setDan(String dan) {
+    public void setDan(DayOfWeek dan) {
         this.dan = dan;
     }
 

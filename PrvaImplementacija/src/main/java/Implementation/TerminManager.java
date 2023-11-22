@@ -3,6 +3,7 @@ package Implementation;
 import model.Prostorija;
 import model.Termin;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,8 +35,8 @@ public class TerminManager {
         return termin -> termin.getDatum().equals(datum);
     }
 
-    public static TerminFilter filtrirajPoDanu(String dan) {
-        return termin -> termin.getDan().equalsIgnoreCase(dan);
+    public static TerminFilter filtrirajPoDanu(DayOfWeek dan) {
+        return termin -> termin.getDan().equals(dan);
     }
 
     public static TerminFilter filtrirajPoDodatnimPodacima(Map<String, String> additionalData) {

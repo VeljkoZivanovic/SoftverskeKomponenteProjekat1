@@ -1,6 +1,7 @@
 package SK_Specification_Matic_Zivanovic;
 
 import Serialization.SaveLoadScheduleCSV;
+import Serialization.SaveLoadScheduleJSON;
 import exception.NePostojiProstorija;
 import exception.NevalidanTerminException;
 import model.FormatFajla;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class RasporedWrapper implements RasporedSpecifikacija{
     private List<Termin> termini;
@@ -133,13 +133,21 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
      * @param config
      */
     @Override
-    public void ucitajIzFajla(String putanja, FormatFajla format, String config) {
+    public void ucitajIzFajla(String putanja, FormatFajla format, String config, String config2) {
         SaveLoadScheduleCSV csv = new SaveLoadScheduleCSV(this);
-        try {
-            csv.loadFile(putanja, config);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        SaveLoadScheduleJSON json = new SaveLoadScheduleJSON(this);
+        if(format == FormatFajla.CSV)
+            try {
+                csv.loadFile(putanja, config, config2);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        else if(format == FormatFajla.JSON)
+            try {
+                json.loadFile(putanja, config, config2);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
     }
     /**
      * Snimanje podataka u fajl
@@ -148,13 +156,22 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
      */
     @Override
     public void snimiUFajl(String putanja, FormatFajla format) {
-        System.out.println("bbbbbbbbbbbbbbbbbbbbbbb");
+        SaveLoadScheduleJSON json = new SaveLoadScheduleJSON(this);
         SaveLoadScheduleCSV csv = new SaveLoadScheduleCSV(this);
-        try {
-            System.out.println("ccccccccccccccccc");
-            csv.exportData(putanja);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(format == FormatFajla.CSV)
+            try {
+                csv.exportData(putanja);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        else if(format == FormatFajla.JSON)
+            try {
+                json.exportData(putanja);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        else if(format == FormatFajla.PDF) {
+            System.out.println("PDF");
         }
     }
     /**

@@ -40,16 +40,9 @@ public class PrvaImplementacija extends RasporedWrapper {
 
     @Override
     public void dodajTermin(Termin termin) throws NevalidanTerminException {
-        for(Termin t : super.getTermini())
-        {
-            if(t.getProstorija().equals(termin.getProstorija()) &&
-                    t.getDatum().equals(termin.getDatum()) &&
-                    !t.getPocetak().isAfter(termin.getKraj()) &&
-                    !t.getKraj().isBefore(termin.getPocetak()))
-                throw new NevalidanTerminException();
-            //else super.getTermini().add(termin);
-        }
-        super.getTermini().add(termin);
+        if(super.getTermini().contains(termin))
+            throw new NevalidanTerminException();
+        else super.getTermini().add(termin);
     }
 
     @Override
@@ -72,9 +65,10 @@ public class PrvaImplementacija extends RasporedWrapper {
         }
     }
 
+
     @Override
-    public void ucitajIzFajla(String putanja, FormatFajla formatFajla, String config) {
-        super.ucitajIzFajla(putanja, formatFajla, config);
+    public void ucitajIzFajla(String putanja, FormatFajla formatFajla, String config, String config2) {
+        super.ucitajIzFajla(putanja, formatFajla, config, config2);
     }
 
     @Override

@@ -1,13 +1,16 @@
 package Serialization;
 
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import model.Prostorija;
 import model.Termin;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.csv.CSVParser;
-
 
 import java.io.*;
 import java.time.DayOfWeek;
@@ -17,19 +20,15 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.ResolverStyle;
 import java.util.*;
-import java.util.List;
-import java.util.Map;
 
-public class SaveLoadScheduleCSV {
-
+public class SaveLoadScheduleJSON {
     public final RasporedWrapper rw;
 
-    public SaveLoadScheduleCSV(RasporedWrapper rw) {
+    public SaveLoadScheduleJSON(RasporedWrapper rw) {
         this.rw = rw;
     }
 
-    public boolean exportData(String path) throws IOException{
-        System.out.println("ddddddddddddddddddddddddddd");
+    public boolean exportData(String path) throws IOException {
         writeData(path);
         return true;
     }
@@ -42,20 +41,22 @@ public class SaveLoadScheduleCSV {
     public void loadApache(String filePath, String configPath, String configPath2) throws IOException {
         List<ConfigMapping> columnMappings = readConfig(configPath);
         List<DayMapping> columnMappingsDay = readConfigDay(configPath2);
-        Map<Integer, String> mappings = new HashMap<>();
+        Map<String, String> mappings = new HashMap<>();
         Map<String, String> mappingsDay = new HashMap<>();
         //LocalTime endDateTime = null;
         for(ConfigMapping configMapping : columnMappings) {
-            mappings.put(configMapping.getIndex(), configMapping.getOriginal());
+            mappings.put(configMapping.getCustom(), configMapping.getOriginal());
         }
         for(DayMapping dayMapping : columnMappingsDay) {
             mappingsDay.put(dayMapping.getOriginal(), dayMapping.getCustom());
         }
 
         FileReader fileReader = new FileReader(filePath);
-        CSVParser parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(fileReader);
+        JsonReader jsonReader = new JsonReader(fileReader);
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(jsonReader, JsonArray.class);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
         DateTimeFormatter inputFormatterStart = new DateTimeFormatterBuilder()
                 .appendPattern("HH:mm")
                 .toFormatter()
@@ -64,28 +65,27 @@ public class SaveLoadScheduleCSV {
                 .appendPattern("HH")
                 .toFormatter()
                 .withResolverStyle(ResolverStyle.STRICT);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(mappings.get(-2));
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        for (CSVRecord record : parser) {
+        for (JsonElement element : jsonArray) {
             Termin appointment = new Termin();
+            JsonObject jsonObject = element.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                String key = entry.getKey();
+                JsonElement value = entry.getValue();
+                System.out.println("Key: " + key + " Value: " + value);
+                System.out.println(mappings.get(key));
 
-            for (ConfigMapping entry : columnMappings) {
-                int columnIndex = entry.getIndex();
-
-                if(columnIndex == -1) continue;
-
-                String columnName = entry.getCustom();
-
-                switch (mappings.get(columnIndex)) {
+                switch (mappings.get(key)) {
                     case "prostorija":
-                        String [] split2 = record.get(columnIndex).split("",2);
+                        String [] split2 = value.getAsString().split("",2);
                         String identifikator = split2[0];
                         String additionalData = split2[1];
                         appointment.setProstorija(new Prostorija(identifikator, additionalData));
                         break;
                     case "pocetak":
-                        if(record.get(columnIndex).contains("-")) {
-                            String[] split = record.get(columnIndex).split("-", 2);
+                        if(value.getAsString().contains("-")) {
+                            String[] split = value.getAsString().split("-", 2);
                             LocalTime startDateTime = LocalTime.parse(split[0], inputFormatterStart);
                             //endDateTime = LocalTime.parse(split[1], inputFormatterEnd);
                             String formattedStartTime = outputFormatter.format(startDateTime);
@@ -97,23 +97,23 @@ public class SaveLoadScheduleCSV {
                             //System.out.println("Pocetak: " + appointment.getPocetak() + " Kraj: " + appointment.getKraj());
                         }
                         else {
-                            LocalTime startDateTime = LocalTime.parse(record.get(columnIndex), inputFormatterStart);
+                            LocalTime startDateTime = LocalTime.parse(value.getAsString(), inputFormatterStart);
                             String formattedStartTime = outputFormatter.format(startDateTime);
                             appointment.setPocetak(LocalTime.parse(formattedStartTime, outputFormatter));
                             //System.out.println("Pocetak: " + appointment.getPocetak());
                         }
                         break;
-                        case "kraj":
-                        LocalTime endDateTime = LocalTime.parse(record.get(columnIndex), inputFormatterEnd);
+                    case "kraj":
+                        LocalTime endDateTime = LocalTime.parse(value.getAsString(), inputFormatterEnd);
                         String formattedEndTime = outputFormatter.format(endDateTime);
                         appointment.setKraj(LocalTime.parse(formattedEndTime, outputFormatter));
                         break;
                     case "datum":
-                        LocalDate datum = LocalDate.parse(record.get(columnIndex), formatter);
+                        LocalDate datum = LocalDate.parse(value.getAsString(), formatter);
                         appointment.setDatum(datum);
                         break;
                     case "dan":
-                        String tab = record.get(columnIndex);
+                        String tab = value.getAsString();
                         tab = tab.replaceAll("[ \\t\\n\\x0B\\f\\r\\u00A0\\u2028\\u2029]+","");
                         System.out.println(tab);
                         switch(mappingsDay.get(tab))
@@ -136,7 +136,7 @@ public class SaveLoadScheduleCSV {
                         }
                         break;
                     case "additionalData":
-                        appointment.getAdditionalData().put(columnName, record.get(columnIndex));
+                        appointment.getAdditionalData().put(key,value.getAsString());
                         break;
                 }
             }
@@ -144,7 +144,7 @@ public class SaveLoadScheduleCSV {
         }
     }
 
-    private static List<ConfigMapping>  readConfig(String filePath) throws FileNotFoundException{
+    private static List<ConfigMapping>  readConfig(String filePath) throws FileNotFoundException {
         List<ConfigMapping> mappings = new ArrayList<>();
 
         File file = new File(filePath);
@@ -181,24 +181,60 @@ public class SaveLoadScheduleCSV {
         return mappingsDay;
     }
     private void writeData(String path) throws IOException {
-        // Create a FileWriter and CSVPrinter
-        System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeee");
         FileWriter fileWriter = new FileWriter(path);
-        CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapterFactory(new LocalDateAdapterFactory())
+                .registerTypeAdapterFactory(new LocalTimeAdapterFactory())
+                .setPrettyPrinting()
+                .create();
 
         for (Termin appointment : rw.getTermini()) {
-            System.out.println("fffffffffffffffffffffffffffff");
-            csvPrinter.printRecord(
-                    appointment.getPocetak(),
-                    appointment.getKraj(),
-                    appointment.getDan(),
-                    appointment.getDatum(),
-                    appointment.getProstorija(),
-                    appointment.getAdditionalData()
-            );
+            String jsonData = gson.toJson(appointment);
+            fileWriter.write(jsonData);
         }
-
-        csvPrinter.close();
         fileWriter.close();
     }
+    static class LocalDateTypeAdapter extends TypeAdapter<LocalDate> {
+
+        @Override
+        public void write(JsonWriter jsonWriter,LocalDate localDate) throws IOException {
+            jsonWriter.value(localDate.toString());
+        }
+
+        @Override
+        public LocalDate read(final JsonReader jsonReader) throws IOException {
+            return LocalDate.parse(jsonReader.nextString());
+        }
+    }
+    static class LocalTimeTypeAdapter extends TypeAdapter<LocalTime> {
+
+        @Override
+        public void write(JsonWriter jsonWriter,LocalTime localTime) throws IOException {
+            jsonWriter.value(localTime.toString());
+        }
+
+        @Override
+        public LocalTime read(final JsonReader jsonReader) throws IOException {
+            return LocalTime.parse(jsonReader.nextString());
+        }
+    }
+    static class LocalTimeAdapterFactory implements TypeAdapterFactory {
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> TypeAdapter<T> create(final Gson gson, final TypeToken<T> typeToken) {
+            return typeToken.getRawType() == LocalTime.class
+                    ? (TypeAdapter<T>) new LocalTimeTypeAdapter()
+                    : null;
+        }
+    }
+    static class LocalDateAdapterFactory implements TypeAdapterFactory {
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> TypeAdapter<T> create(final Gson gson, final TypeToken<T> typeToken) {
+            return typeToken.getRawType() == LocalDate.class
+                    ? (TypeAdapter<T>) new LocalDateTypeAdapter()
+                    : null;
+        }
+    }
 }
+
