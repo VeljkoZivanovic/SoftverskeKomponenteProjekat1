@@ -10,6 +10,8 @@ import model.Termin;
 import exception.ProstorijaVecPostoji;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
 public abstract class RasporedWrapper implements RasporedSpecifikacija{
     private List<Termin> termini;
     private List<Termin> filtriraniTermini;
+
+    private List<DayOfWeek> dani;
     private List<Prostorija> prostorije;
     private LocalDateTime pocetak;
     private LocalDateTime kraj;
@@ -64,6 +68,21 @@ public abstract class RasporedWrapper implements RasporedSpecifikacija{
         termini = new ArrayList<>();
         prostorije = new ArrayList<>();
         filtriraniTermini = new ArrayList<>();
+        dani = new ArrayList<>();
+    }
+
+    /**
+     * Odredjivanje dana u nedelji
+     * @param pocetniDatum
+     * @param krajnjiDatum
+     */
+    @Override
+    public void odrediDaneUNedelji(LocalDate pocetniDatum, LocalDate krajnjiDatum){
+        DayOfWeek pocetniDan = pocetniDatum.getDayOfWeek();
+        DayOfWeek krajnjiDan = krajnjiDatum.getDayOfWeek();
+        dani.add(pocetniDan);
+        dani.add(krajnjiDan);
+        System.out.println("Pocetni dan: " + pocetniDan + " Krajnji dan: " + krajnjiDan);
     }
 
     /**
