@@ -1,6 +1,7 @@
 package org.example;
 
 import Implementation.PrvaImplementacija;
+import SK_Specification_Matic_Zivanovic.RasporedManager;
 import SK_Specification_Matic_Zivanovic.RasporedWrapper;
 import exception.NePostojiProstorija;
 import exception.NevalidanTerminException;
@@ -112,6 +113,7 @@ public class RasporedCLI {
 
                     System.out.println("Unesite dan:");
                     String dan = scanner.nextLine();
+                    /*
                     Termin termin = new Termin(prostorija,pocetak,kraj,additionalDataTermin,datum,dan);
                     try {
                         rasporedWrapper.dodajTermin(termin);
@@ -119,6 +121,7 @@ public class RasporedCLI {
                     } catch (NevalidanTerminException e) {
                         throw new RuntimeException(e);
                     }
+                     */
                     break;
                 case 4:
                     System.out.println("Unesite podatke o terminu koji zelite da obrisete");
@@ -155,8 +158,8 @@ public class RasporedCLI {
                     System.out.println("Unesite dan:");
                     String dan1 = scanner.nextLine();
 
-                    Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
-                    rasporedWrapper.obrisiTermin(termin1);
+                    //Termin termin1 = new Termin(prostorija1,pocetak1,kraj1,additionalDataTermin1,datum1,dan1);
+                    //rasporedWrapper.obrisiTermin(termin1);
                     break;
                 case 5:
                     System.out.println("Unesite podatke o terminu koji zelite da premestite");
@@ -193,7 +196,7 @@ public class RasporedCLI {
                     System.out.println("Unesite dan:");
                     String danStari = scanner.nextLine();
 
-                    Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
+                    //Termin terminStari = new Termin(prostorijaStari, pocetakStari, krajStari, additionalDataTerminStari, datumStari, danStari);
 
                     System.out.println("Unesite podatke o novom terminu na koji zelite da premestite stari termin");
                     System.out.println("Unesite identifikator prostorije:");
@@ -229,8 +232,8 @@ public class RasporedCLI {
                     System.out.println("Unesite dan:");
                     String danNovi = scanner.nextLine();
 
-                    Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
-                    rasporedWrapper.premestiTermin(terminStari, terminNovi);
+                    //Termin terminNovi = new Termin(prostorijaNovi, pocetakNovi, krajNovi,additionalDataTerminStari, datumNovi,danNovi);
+                    //rasporedWrapper.premestiTermin(terminStari, terminNovi);
 
                     break;
                 case 6:
@@ -243,7 +246,10 @@ public class RasporedCLI {
                     System.out.println("Unesite putanju do config fajla");
                     String config = scanner.nextLine();
 
-                    rasporedWrapper.ucitajIzFajla(putanja, formatFajla,config);
+                    System.out.println("Unesite putanju do config fajla sa danima");
+                    String configd = scanner.nextLine();
+
+                    rasporedWrapper.ucitajIzFajla(putanja, formatFajla,config,configd);
                     System.out.println(rasporedWrapper.getTermini().toString());
                     break;
                 case 7:
@@ -308,8 +314,8 @@ public class RasporedCLI {
                     String dan5 = scanner.nextLine();
                     if(dan5.equals("0")) dan5 = null;
 
-                    Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,dan5);
-                    rasporedWrapper.filtriraj(termin5);
+                    //Termin termin5 = new Termin(prostorija5,pocetak5,kraj5,additionalDataTermin5,dan5);
+                    //rasporedWrapper.filtriraj(termin5);
                     System.out.println("Filtrirani termini: " + rasporedWrapper.getFiltriraniTermini().toString());
                     break;
                 case 9:
